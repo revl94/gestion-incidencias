@@ -24,4 +24,12 @@ router.get('/get_tickets', async (req, res) => {
         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
     }
 });
+
+//Funcion para imprimir errores
+function printError(e){
+    if(e!=null){
+        console.log(e)
+    }
+}
+
 module.exports = router;
