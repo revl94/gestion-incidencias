@@ -26,6 +26,7 @@ router.get('/get_tickets', async (req, res) => {
     }
 });
 
+
 async function clockifyHours(reqId) {
 
     const cloHours = await pool.query(`SELECT act_time_loaded FROM activities 
