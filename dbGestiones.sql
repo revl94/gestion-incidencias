@@ -105,7 +105,7 @@ ENGINE = InnoDB AUTO_INCREMENT=52 DEFAULT CHARACTER SET = utf8;
 
 -- Dumping data for table dbgestionocupacion.request: ~8 rows (approximately)
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
-INSERT INTO `request` (`req_id`, `board_id`, `project_id`, `task_id`, `req_ms_project`, `cli_id`, `coa_id`, `req_title`, `req_description`, `req_responsable`, `req_order_priority`, `req_date`, `req_init_date`, `req_final_date`, `req_real_final_date`, `sta_id`, `req_advance_ptge`, `req_deviations_ptge`, `req_client_completed_deliverables`, `req_client_pending_activities`, `req_client_comments`, `req_intelix_completed_deliverables`, `req_intelix_pending_activities`, `req_intelix_comments`, `req_last_update_date`, `rty_id`, `tea_id`, `req_comitee`, `req_comitee_points_discuss`, `req_day_desv`, `req_cargar`) VALUES
+INSERT INTO `request` (`req_id`, `board_id`, `list_id`, `project_id`, `task_id`, `req_ms_project`, `cli_id`, `coa_id`, `req_title`, `req_description`, `req_responsable`, `req_order_priority`, `req_date`, `req_init_date`, `req_final_date`, `req_real_final_date`, `sta_id`, `req_advance_ptge`, `req_deviations_ptge`, `req_client_completed_deliverables`, `req_client_pending_activities`, `req_client_comments`, `req_intelix_completed_deliverables`, `req_intelix_pending_activities`, `req_intelix_comments`, `req_last_update_date`, `rty_id`, `tea_id`, `req_comitee`, `req_comitee_points_discuss`, `req_day_desv`, `req_cargar`) VALUES
 	(40, '5ee2fe80dd1a4b0ca12b8514', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', NULL, NULL, 'prueba 13', NULL, NULL, NULL, NULL, '9999-12-31', '9999-12-31', NULL, 'open', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'false'),
 	(45, '5ecc545f367f7d139208c139', NULL, NULL, NULL, NULL, NULL, 'Centro de Desarrollo - Productos Intelix Capítulo ABX', NULL, NULL, NULL, NULL, '9999-12-31', '9999-12-31', NULL, 'open', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'false'),
 	(46, '5ee2f4d36ec4910464b7e906', NULL, NULL, NULL, NULL, NULL, 'preuba12', NULL, NULL, NULL, NULL, '9999-12-31', '9999-12-31', NULL, 'open', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'false'),
@@ -293,21 +293,22 @@ CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`branch` (
   `ram_id` INT NOT NULL AUTO_INCREMENT,
   `ram_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
   `board_id` VARCHAR(50) NULL DEFAULT NULL,
+  `list_id` VARCHAR(50) NULL DEFAULT NULL,
   PRIMARY KEY (`ram_id`))
 ENGINE = InnoDB;
 
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (1, 'Principal', '5f2436151d46302436fb8208');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (2, 'Ramo Moda', '5f24367d933c1a54a2b6e78e');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (3, 'Beco', '5f24369a912da48cdcae46c9');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (4, 'Abstracta', '5f2436acd53dd97eb485c2fd');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (5, 'Amand', '5f2436e02a33777dddb656dd');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (6, 'Ramo Inmobiliario', '5f2436f8d5b1cc2f4063cc27');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (7, 'Ramo Logistico', '5f243705405e220adbe09766');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (8, 'Beconsult', '5f24371e4d21a37e8cc86b98');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (9, 'EPA', '5f24372d34e3d37452093fab');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (10, 'Ramo Automotriz', '5f24373aee52aa3102ab1e46');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (11, 'Ramo Mayoreo', '5f24374b78e584792fee1a3d');
-INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (12, 'Intelix', '5f2437597b3dd65a06fc4473');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (4, 'Abstracta', '5f2436acd53dd97eb485c2fd', '5f243f052043ff59974ca6b1');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (5, 'Amand', '5f2436e02a33777dddb656dd', '5f2444f8e6c9048771af9189');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (3, 'Beco', '5f24369a912da48cdcae46c9', '5f2445008ff1c42f92a51e0b');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (8, 'Beconsult', '5f24371e4d21a37e8cc86b98', '5f2444a2e99e7a0c2a6b2d4c');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (9, 'EPA', '5f24372d34e3d37452093fab', '5f24449a01cb8a7c0c3aa697');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (12, 'Intelix', '5f2437597b3dd65a06fc4473', '5f2444822ec6ec870decbd9a');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (1, 'Principal', '5f2436151d46302436fb8208', '5f244513178dc777ea78046c');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (10, 'Ramo Automotriz', '5f24373aee52aa3102ab1e46', '5f2444902e44a25e241d8b31');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (6, 'Ramo Inmobiliario', '5f2436f8d5b1cc2f4063cc27', '5f2444d399415a5534f90f03');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (7, 'Ramo Logistico', '5f243705405e220adbe09766', '5f2444a8abdafe539df04b0d');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (11, 'Ramo Mayoreo', '5f24374b78e584792fee1a3d', '5f244488937cf95b50ca5156');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (2, 'Ramo Moda', '5f24367d933c1a54a2b6e78e', '5f24452ee2765e54b3aad27a');
 
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;

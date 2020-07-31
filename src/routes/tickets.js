@@ -72,7 +72,7 @@ router.get('/get_hours/:id', async (req, res) => {
             res.send("ERROR")
         }else{
             const userId = await getUserID(user[0].usr_email);
-            const hours = await getTimeEntries(userId, ticket[0].tic_title)
+            const hours = await getTimeEntries(userId, ticket[0].tic_id+ "-"+ticket[0].tic_title)
             if(hours.length > 0){
                 let time = {}
                 let min = 0
