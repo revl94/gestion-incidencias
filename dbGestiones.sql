@@ -43,6 +43,7 @@ CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`user` (
   `usr_id` INT(11) NOT NULL AUTO_INCREMENT,
   `usr_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
   `usr_email` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `usr_ci` VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
   `usr_id_trello` INT(11) NULL DEFAULT NULL,
   `usr_id_clockify` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`usr_id`))
@@ -268,15 +269,17 @@ DROP TABLE IF EXISTS `dbgestionocupacion`.`tickets` ;
 CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`tickets` (
   `tic_id` INT NOT NULL AUTO_INCREMENT,
   `tic_title` VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_description` VARCHAR(1024) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_entity` VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `tic_description`MEDIUMTEXT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
   `tic_branch` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
   `tic_subsidiary` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `tic_deparment` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `tic_usr_ci` VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
   `tic_category` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_priority` INT(11) NULL DEFAULT '1',
+  `tic_priority` VARCHAR(15) NULL DEFAULT NULL,
   `tic_assigned_to` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
   `tic_date` DATE NULL DEFAULT NULL,
   `tic_last_update_date` DATE NULL DEFAULT NULL,
+  `tic_sol_date` DATE NULL DEFAULT NULL,
   `tic_closing_date` DATE NULL DEFAULT NULL,
   `tic_clockify_time` TIME NULL DEFAULT NULL,
   `tic_sla` INT(11) NULL DEFAULT NULL,
@@ -284,6 +287,14 @@ CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`tickets` (
   PRIMARY KEY (`tic_id`))
 ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS `dbgestionocupacion`.`ramo` ;
+
+CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`branch` (
+  `ram_id` INT NOT NULL AUTO_INCREMENT,
+  `ram_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `board_id` VARCHAR(50) NULL DEFAULT NULL,
+  PRIMARY KEY (`ram_id`))
+ENGINE = InnoDB;
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
