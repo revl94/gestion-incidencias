@@ -118,7 +118,33 @@ function getBoards() {
     });
 }
 
+// Funcion para crear card dado un ticket
+function createCardByTicket(ticId) {
+    return new Promise(async (resolve, reject) => {
+        let newArray = [];
+        try {
+            const result = await pool.query(`SELECT tic_id, tic_title,
+              (SELECT board_id FROM branch
+               WHERE ram_name IN (SELECT tic_branch FROM tickets WHERE tic_id = '${ticId}')) AS board_id,
+               (SELECT list_id FROM branch
+               WHERE ram_name IN (SELECT tic_branch FROM tickets WHERE tic_id = '${ticId}')) AS list_id
+               FROM dbgestionocupacion.tickets WHERE tic_id = '${ticId}'`);
 
+                // Convertir en un array
+                newArray.push(result[0]);
+
+                // Llamado a la funcion crear card
+            await createCard(newArray[0].list_id, newArray[0].tic_id + newArray[0].tic_title, "Descripcion de prueba");
+
+            resolve(result)
+        } catch (err) {
+            console.log(err);
+            reject(err)
+        }
+
+    });
+
+}
 
 
 //Funcion para imprimir errores

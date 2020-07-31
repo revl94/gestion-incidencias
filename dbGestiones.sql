@@ -259,31 +259,54 @@ INSERT INTO `activities` (`act_id`, `req_id`, `act_trello_name`, `act_descriptio
 /*!40000 ALTER TABLE `activities` ENABLE KEYS */;
 
 
-
 -- -----------------------------------------------------
 -- Table `dbgestionocupacion`.`tickets`
 -- -----------------------------------------------------
 DROP TABLE IF EXISTS `dbgestionocupacion`.`tickets` ;
 
 CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`tickets` (
-  `tic_id` INT NOT NULL AUTO_INCREMENT,
-  `tic_title` VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_description` VARCHAR(1024) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_entity` VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_branch` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_subsidiary` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_category` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_priority` INT(11) NULL DEFAULT '1',
-  `tic_assigned_to` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
-  `tic_date` DATE NULL DEFAULT NULL,
-  `tic_last_update_date` DATE NULL DEFAULT NULL,
-  `tic_closing_date` DATE NULL DEFAULT NULL,
-  `tic_clockify_time` TIME NULL DEFAULT NULL,
-  `tic_sla` INT(11) NULL DEFAULT NULL,
-  `tic_card_init` VARCHAR(45) CHARACTER SET 'utf8' NULL DEFAULT 'false',
-  PRIMARY KEY (`tic_id`))
+`tic_id` INT NOT NULL AUTO_INCREMENT,
+`tic_title` VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_description`MEDIUMTEXT CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_branch` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_subsidiary` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_deparment` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_usr_ci` VARCHAR(20) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_category` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_priority` VARCHAR(15) NULL DEFAULT NULL,
+`tic_assigned_to` VARCHAR(255) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`tic_date` DATE NULL DEFAULT NULL,
+`tic_last_update_date` DATE NULL DEFAULT NULL,
+`tic_sol_date` DATE NULL DEFAULT NULL,
+`tic_closing_date` DATE NULL DEFAULT NULL,
+`tic_clockify_time` TIME NULL DEFAULT NULL,
+`tic_sla` INT(11) NULL DEFAULT NULL,
+`tic_card_init` VARCHAR(45) CHARACTER SET 'utf8' NULL DEFAULT 'false',
+PRIMARY KEY (`tic_id`))
 ENGINE = InnoDB;
 
+DROP TABLE IF EXISTS `dbgestionocupacion`.`branch` ;
+
+CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`branch` (
+`ram_id` INT NOT NULL AUTO_INCREMENT,
+`ram_name` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+`board_id` VARCHAR(50) NULL DEFAULT NULL,
+`list_id` VARCHAR(50) NULL DEFAULT NULL,
+PRIMARY KEY (`ram_id`))
+ENGINE = InnoDB;
+
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (4, 'Abstracta', '5f2436acd53dd97eb485c2fd', '5f243f052043ff59974ca6b1');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (5, 'Amand', '5f2436e02a33777dddb656dd', '5f2444f8e6c9048771af9189');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (3, 'Beco', '5f24369a912da48cdcae46c9', '5f2445008ff1c42f92a51e0b');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (8, 'Beconsult', '5f24371e4d21a37e8cc86b98', '5f2444a2e99e7a0c2a6b2d4c');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (9, 'EPA', '5f24372d34e3d37452093fab', '5f24449a01cb8a7c0c3aa697');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (12, 'Intelix', '5f2437597b3dd65a06fc4473', '5f2444822ec6ec870decbd9a');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (1, 'Principal', '5f2436151d46302436fb8208', '5f244513178dc777ea78046c');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (10, 'Ramo Automotriz', '5f24373aee52aa3102ab1e46', '5f2444902e44a25e241d8b31');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (6, 'Ramo Inmobiliario', '5f2436f8d5b1cc2f4063cc27', '5f2444d399415a5534f90f03');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (7, 'Ramo Logistico', '5f243705405e220adbe09766', '5f2444a8abdafe539df04b0d');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (11, 'Ramo Mayoreo', '5f24374b78e584792fee1a3d', '5f244488937cf95b50ca5156');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`) VALUES (2, 'Ramo Moda', '5f24367d933c1a54a2b6e78e', '5f24452ee2765e54b3aad27a');
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
