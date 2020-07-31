@@ -56,6 +56,12 @@ router.get('/get_ticket/:id', async (req, res) => {
             await pool.query('UPDATE tickets SET tic_title = ?, tic_description = ?, tic_branch = ?, tic_subsidiary = ?, tic_deparment = ?, tic_usr_ci = ?, tic_category = ?, tic_priority = ?, tic_assigned_to = ?, tic_date = ?, tic_last_update_date = ?, tic_closing_date = ?, tic_sol_date = ?  WHERE tic_id = ?', 
             [ result[0]["Título"], result[0]["Descripción"], result[0]["Ramo"], result[0]["Sucursal"], result[0]["Departamento"], result[0]["Username"], result[0]["Categoría"], result[0]["Prioridad"], result[0]["Asignado a"], result[0]["Fecha Solicitud"], result[0]["Fecha Último Cambio"], result[0]["Fecha Cierre"], result[0]["Fecha Solución"], result[0]["Id Ticket"] ])
         }
+        const user = await pool.query('SELECT * FROM user WHERE usr_ci = ' + result[0]["Username"]);
+        if(user.length == 0){
+            await pool.query('INSERT INTO user SET ?', {"usr_name": result[0]["Asignado a"], "usr_ci": result[0]["Username"]})
+        }else{
+            await pool.query('UPDATE user SET usr_name = ?, usr_ci = ? WHERE usr_ci = ?', [result[0]["Asignado a"], result[0]["Username"], user[0].usr_id])
+        }
         res.json({glpi: result})
     }
 });
