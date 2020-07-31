@@ -1,0 +1,12 @@
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (1, 'Principal', '5f2436151d46302436fb8208');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (2, 'Ramo Moda', '5f24367d933c1a54a2b6e78e');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (3, 'Beco', '5f24369a912da48cdcae46c9');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (4, 'Abstracta', '5f2436acd53dd97eb485c2fd');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (5, 'Amand', '5f2436e02a33777dddb656dd');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (6, 'Ramo Inmobiliario', '5f2436f8d5b1cc2f4063cc27');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (7, 'Ramo Logistico', '5f243705405e220adbe09766');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (8, 'Beconsult', '5f24371e4d21a37e8cc86b98');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (9, 'EPA', '5f24372d34e3d37452093fab');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (10, 'Ramo Automotriz', '5f24373aee52aa3102ab1e46');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (11, 'Ramo Mayoreo', '5f24374b78e584792fee1a3d');
+INSERT INTO `branch` (`ram_id`, `ram_name`, `board_id`) VALUES (12, 'Intelix', '5f2437597b3dd65a06fc4473');
