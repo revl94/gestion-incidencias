@@ -26,6 +26,11 @@ const router = express.Router();
 const HttpStatus = require('http-status-codes');
 
 //Rutas
+router.get('/get_tickets', async (req, res) => {
+    //Ruta para el reporte de Incidencias
+    const result = await pool.query('SELECT * FROM tickets');
+    res.json({tickets: result})
+});
 router.get('/get_ticket/:id', async (req, res) => {
     /*
     Ruta para obtener los datos del ticket
@@ -101,6 +106,10 @@ router.get('/get_hours/:id', async (req, res) => {
                 await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?', 
                 [finaltime , id])
                 res.json({finaltime})
+            }else{
+                await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?', 
+                ["00:00:00" , id])
+                res.json({finaltime: "00:00:00"})
             }
         }
     }
