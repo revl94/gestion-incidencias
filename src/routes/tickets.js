@@ -7,15 +7,15 @@ const database  = require('../../config/config');
 const pool = require('../../database');
 const workspaceId = '5c79aee1b079877a63415e08'
 //Initializations
+//Conexion a BD de GLPI
 const glpi = mysql.createPool(database.glpi);
-
 glpi.getConnection((err, connection) => {
     if(connection) connection.release();
     console.log('GLPI is connected');
     return;
 });
 glpi.query = promisify(glpi.query);
-
+//Axios con token de Clockify
 const ClockifyAxios = axios.create({
     baseURL: 'https://api.clockify.me/api/v1'
 });
@@ -27,24 +27,41 @@ const HttpStatus = require('http-status-codes');
 
 //Rutas
 router.get('/get_ticket/:id', async (req, res) => {
+    /*
+    Ruta para obtener los datos del ticket
+    Requiere ID del ticket  parametro: { id }
+    Verificacion en base de datos de GPLI
+    Trae los datos, los almacena(inserta o actualiza) en local y los retorna si la consulta fue exitosa
+    Si la consulta no fue exitosa retorna la cadena "ERROR"
+    */
     const { id } = req.params
     const result = await glpi.query('SELECT * FROM `glpidb`.`view_tickets_v3` WHERE `Id Ticket` = '+id)
-    const count = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
-    if(count.length == 0){
-        await pool.query('INSERT INTO tickets SET ?', 
-            { "tic_id":result[0]["Id Ticket"], "tic_title": result[0]["Título"], "tic_description": result[0]["Descripción"], 
-            "tic_branch": result[0]["Ramo"], "tic_subsidiary": result[0]["Sucursal"], "tic_deparment": result[0]["Departamento"], 
-            "tic_usr_ci": result[0]["Username"], "tic_category": result[0]["Categoría"], "tic_priority": result[0]["Prioridad"], 
-            "tic_assigned_to": result[0]["Asignado a"], "tic_date": result[0]["Fecha Solicitud"], "tic_last_update_date": result[0]["Fecha Último Cambio"], 
-            "tic_closing_date": result[0]["Fecha Cierre"], "tic_sol_date": result[0]["Fecha Solución"] })
+    if(result.length == 0){
+        res.send("ERROR")
     }else{
-        await pool.query('UPDATE tickets SET tic_title = ?, tic_description = ?, tic_branch = ?, tic_subsidiary = ?, tic_deparment = ?, tic_usr_ci = ?, tic_category = ?, tic_priority = ?, tic_assigned_to = ?, tic_date = ?, tic_last_update_date = ?, tic_closing_date = ?, tic_sol_date = ?  WHERE tic_id = ?', 
-        [ result[0]["Título"], result[0]["Descripción"], result[0]["Ramo"], result[0]["Sucursal"], result[0]["Departamento"], result[0]["Username"], result[0]["Categoría"], result[0]["Prioridad"], result[0]["Asignado a"], result[0]["Fecha Solicitud"], result[0]["Fecha Último Cambio"], result[0]["Fecha Cierre"], result[0]["Fecha Solución"], result[0]["Id Ticket"] ])
+        const count = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
+        if(count.length == 0){
+            await pool.query('INSERT INTO tickets SET ?', 
+                { "tic_id":result[0]["Id Ticket"], "tic_title": result[0]["Título"], "tic_description": result[0]["Descripción"], 
+                "tic_branch": result[0]["Ramo"], "tic_subsidiary": result[0]["Sucursal"], "tic_deparment": result[0]["Departamento"], 
+                "tic_usr_ci": result[0]["Username"], "tic_category": result[0]["Categoría"], "tic_priority": result[0]["Prioridad"], 
+                "tic_assigned_to": result[0]["Asignado a"], "tic_date": result[0]["Fecha Solicitud"], "tic_last_update_date": result[0]["Fecha Último Cambio"], 
+                "tic_closing_date": result[0]["Fecha Cierre"], "tic_sol_date": result[0]["Fecha Solución"] })
+        }else{
+            await pool.query('UPDATE tickets SET tic_title = ?, tic_description = ?, tic_branch = ?, tic_subsidiary = ?, tic_deparment = ?, tic_usr_ci = ?, tic_category = ?, tic_priority = ?, tic_assigned_to = ?, tic_date = ?, tic_last_update_date = ?, tic_closing_date = ?, tic_sol_date = ?  WHERE tic_id = ?', 
+            [ result[0]["Título"], result[0]["Descripción"], result[0]["Ramo"], result[0]["Sucursal"], result[0]["Departamento"], result[0]["Username"], result[0]["Categoría"], result[0]["Prioridad"], result[0]["Asignado a"], result[0]["Fecha Solicitud"], result[0]["Fecha Último Cambio"], result[0]["Fecha Cierre"], result[0]["Fecha Solución"], result[0]["Id Ticket"] ])
+        }
+        res.json({glpi: result})
     }
-    res.json({glpi: result})
 });
 
 router.get('/get_hours/:id', async (req, res) => {
+    /*
+    Ruta para obtener las horas empleadas en un ticket
+    Requiere ID del ticket  parametro: { id }
+    Trae los datos desde clockify, los almacena(actualiza datos del ticket) en local y los retorna si la consulta fue exitosa
+    Si la consulta no fue exitosa retorna la cadena "ERROR"
+    */
     const { id } = req.params
     const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
     if(ticket.length == 0){
