@@ -1,7 +1,7 @@
 {
   "apps" : [
     {
-      "name"      : "integracion-apis",
+      "name"      : "gestion-incidencias",
       "script"    : "npx",
       "interpreter": "none",
       "args": "npm start"
