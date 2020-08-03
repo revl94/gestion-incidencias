@@ -1,7 +1,8 @@
 const express = require('express');
 const mysql = require('mysql');
 const { promisify } = require('util');
-const axios = require('axios')
+const axios = require('axios').default;
+const https = require('https');
 //Project's own requires
 const database  = require('../../config/config');
 const pool = require('../../database');
@@ -18,6 +19,12 @@ glpi.query = promisify(glpi.query);
 //Axios con token de Clockify
 const ClockifyAxios = axios.create({
     baseURL: 'https://api.clockify.me/api/v1'
+});
+const Backend = axios.create({
+    baseURL: 'http://localhost:4050',
+    httpsAgent: new https.Agent({
+        rejectUnauthorized: false
+    })
 });
 ClockifyAxios.defaults.headers.common['Content-Type'] = 'application/json';
 ClockifyAxios.defaults.headers.common['X-Api-Key'] = 'Xvy1392jqzm2LxBF';
@@ -120,7 +127,42 @@ router.get('/get_hours/:id', async (req, res) => {
         }
     }
 });
-
+router.get('/process_ticket/:id', async (req, res) => {
+    const { id } = req.params
+    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
+    if(ticket.length == 0){
+        res.send("ERROR")
+    }else{
+        const getticket = await Backend.get('/tickets/get_ticket/'+id);
+        if(getticket != "ERROR"){
+            const hours = await Backend.get('/tickets/get_hours/'+id);
+            if(hours != "ERROR"){
+                if(ticket[0].tic_card_id != null){
+                    const updatecard = await Backend.get('/trello/update_card/'+id);
+                    res.send("updatecard")
+                }else{
+                    Backend.post('/trello/post_card',{
+                        "tic_id": id}).then(async (response) => {
+                        if(response.data != "ERROR"){
+                            const updatecard = await Backend.get('/trello/update_card/'+id);
+                            res.send("LISTO")
+                        }else{
+                            res.send("ERROR")
+                        }
+                    }).catch(e => {
+                        console.log(e);
+                        res.send("ERROR")
+                    });
+                }
+                
+            }else{
+                res.send("ERROR")
+            }
+        }else{
+            res.send("ERROR")
+        }
+    }
+});
 function getUserID(email) {
     return new Promise(async (resolve, reject) => {
         try {
