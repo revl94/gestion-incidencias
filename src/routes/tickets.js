@@ -139,7 +139,7 @@ router.get('/process_ticket/:id', async (req, res) => {
     const { id } = req.params
     const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
     if(ticket.length == 0){
-        res.send("ERROR")
+        res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
     }else{
         const getticket = await Backend.get('/tickets/get_ticket/'+id);
         if(getticket != "ERROR"){
@@ -147,7 +147,7 @@ router.get('/process_ticket/:id', async (req, res) => {
             if(hours != "ERROR"){
                 if(ticket[0].tic_card_id != null){
                     const updatecard = await Backend.get('/trello/update_card/'+id);
-                    res.send("updatecard")
+                    res.send("LISTO")
                 }else{
                     Backend.post('/trello/post_card',{
                         "tic_id": id}).then(async (response) => {
@@ -155,19 +155,19 @@ router.get('/process_ticket/:id', async (req, res) => {
                             const updatecard = await Backend.get('/trello/update_card/'+id);
                             res.send("LISTO")
                         }else{
-                            res.send("ERROR")
+                            res.send("Faltan datos para poder procesar el ticket o los mismos son erroneos, por favor verifique la informacion y vuelva a intentar")
                         }
                     }).catch(e => {
                         console.log(e);
-                        res.send("ERROR")
+                        res.send("Error en Trello, no se pudieron crear las cartas.")
                     });
                 }
                 
             }else{
-                res.send("ERROR")
+                res.send("Error en clockify, verifique la informacion del usuario.")
             }
         }else{
-            res.send("ERROR")
+            res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
         }
     }
 });
