@@ -65,7 +65,6 @@ router.get('/get_ticket/:id', async (req, res) => {
         }
         const user = await pool.query('SELECT * FROM user WHERE usr_ci = ' + result[0]["Username"]);
         const email = (await glpi.query('SELECT (SELECT `email` FROM `glpidb`.`glpi_useremails` WHERE `glpidb`.`glpi_useremails`.`id` = `glpidb`.`glpi_users`.`id`) AS `email` FROM `glpidb`.`glpi_users` WHERE `name` =' + result[0]["Username"]))[0].email;
-        console.log(email)
         if(user.length == 0){
             await pool.query('INSERT INTO user SET ?', {"usr_name": result[0]["Asignado a"], "usr_email": email, "usr_ci": result[0]["Username"]})
         }else{
@@ -91,36 +90,43 @@ router.get('/get_hours/:id', async (req, res) => {
         if(user.length == 0){
             res.send("ERROR")
         }else{
-            const userId = await getUserID(user[0].usr_email);
-            const hours = await getTimeEntries(userId, ticket[0].tic_id+ "-"+ticket[0].tic_title)
-            if(hours.length > 0){
-                let time = {}
-                let min = 0
-                let totalmin = 0
-                let totalhours = 0
-                hours.forEach(async (dat, i) => {
-                    oldFormat = hours[i].timeInterval.duration
-                    newFormat = oldFormat.split('PT')
-                    isH = checkH(newFormat[1])
-                    isM = checkM(newFormat[1])
-                    isS = checkS(newFormat[1])
-                    timeFormatted = formatTime(isH, isM, isS)
-                    time[i] = {
-                        "description": hours[i].description,
-                        "hours": timeFormatted[0],
-                        "minutes": timeFormatted[1],
-                        "seconds": timeFormatted[2]
-                    }
-                    min = (parseInt(timeFormatted[0])*60) + parseInt(timeFormatted[1])
-                    totalmin += min
-                })
-                totalhours = totalmin / 60
-                const mins = (totalhours-Math.floor(totalhours))*60
-                const secs = (mins-Math.floor(mins))*60
-                const finaltime = Math.floor(totalhours) + ":" + Math.floor(mins) + ":" + Math.floor(secs)
-                await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
-                    [finaltime , id])
-                res.json({finaltime})
+            let userId = await getUserID(user[0].usr_email);
+            if(userId.length > 0){
+                userId = userId[0].id;
+                const hours = await getTimeEntries(userId, ticket[0].tic_id+ "-"+ticket[0].tic_title)
+                if(hours.length > 0){
+                    let time = {}
+                    let min = 0
+                    let totalmin = 0
+                    let totalhours = 0
+                    hours.forEach(async (dat, i) => {
+                        oldFormat = hours[i].timeInterval.duration
+                        newFormat = oldFormat.split('PT')
+                        isH = checkH(newFormat[1])
+                        isM = checkM(newFormat[1])
+                        isS = checkS(newFormat[1])
+                        timeFormatted = formatTime(isH, isM, isS)
+                        time[i] = {
+                            "description": hours[i].description,
+                            "hours": timeFormatted[0],
+                            "minutes": timeFormatted[1],
+                            "seconds": timeFormatted[2]
+                        }
+                        min = (parseInt(timeFormatted[0])*60) + parseInt(timeFormatted[1])
+                        totalmin += min
+                    })
+                    totalhours = totalmin / 60
+                    const mins = (totalhours-Math.floor(totalhours))*60
+                    const secs = (mins-Math.floor(mins))*60
+                    const finaltime = Math.floor(totalhours) + ":" + Math.floor(mins) + ":" + Math.floor(secs)
+                    await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
+                        [finaltime , id])
+                    res.json({finaltime})
+                }else{
+                    await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
+                        ["00:00:00" , id])
+                    res.json({finaltime: "00:00:00"})
+                }
             }else{
                 await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
                     ["00:00:00" , id])
@@ -168,12 +174,13 @@ router.get('/process_ticket/:id', async (req, res) => {
 function getUserID(email) {
     return new Promise(async (resolve, reject) => {
         try {
-            const result = await ClockifyAxios.get(
-                `/workspaces/${workspaceId}/users?email=${email}`
-            );
-            resolve(result.data[0].id);
+            ClockifyAxios.get(`/workspaces/${workspaceId}/users?email=${email}`)
+            .then( (result) => {
+                resolve(result.data);
+            }).catch((err) => {
+                resolve([]);
+            });
         } catch (error) {
-            printError(error)
             reject(error);
         }
     });

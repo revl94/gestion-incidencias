@@ -49,7 +49,8 @@ router.post('/post_card', async (req, res) => {
     const {tic_id} = req.body;
     const ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = '+ tic_id)
     if(ticket.length > 0){
-        const email = (await pool.query('SELECT * FROM user WHERE `usr_ci` = '+ticket[0].tic_usr_ci))[0].usr_email
+        const email = 'eleon@intelix.biz'
+        //const email = (await pool.query('SELECT * FROM user WHERE `usr_ci` = '+ticket[0].tic_usr_ci))[0].usr_email
         if(ticket[0].tic_card_id == null){
             const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
             if(branch[0].board_custom_create == 1){
