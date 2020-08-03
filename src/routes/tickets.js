@@ -64,10 +64,12 @@ router.get('/get_ticket/:id', async (req, res) => {
                 [ result[0]["Título"], result[0]["Descripción"], result[0]["Ramo"], result[0]["Sucursal"], result[0]["Departamento"], result[0]["Username"], result[0]["Categoría"], result[0]["Prioridad"], result[0]["Asignado a"], result[0]["Fecha Solicitud"], result[0]["Fecha Último Cambio"], result[0]["Fecha Cierre"], result[0]["Fecha Solución"], result[0]["Id Ticket"] ])
         }
         const user = await pool.query('SELECT * FROM user WHERE usr_ci = ' + result[0]["Username"]);
+        const email = (await glpi.query('SELECT (SELECT `email` FROM `glpidb`.`glpi_useremails` WHERE `glpidb`.`glpi_useremails`.`id` = `glpidb`.`glpi_users`.`id`) AS `email` FROM `glpidb`.`glpi_users` WHERE `name` =' + result[0]["Username"]))[0].email;
+        console.log(email)
         if(user.length == 0){
-            await pool.query('INSERT INTO user SET ?', {"usr_name": result[0]["Asignado a"], "usr_ci": result[0]["Username"]})
+            await pool.query('INSERT INTO user SET ?', {"usr_name": result[0]["Asignado a"], "usr_email": email, "usr_ci": result[0]["Username"]})
         }else{
-            await pool.query('UPDATE user SET usr_name = ?, usr_ci = ? WHERE usr_ci = ?', [result[0]["Asignado a"], result[0]["Username"], user[0].usr_id])
+            await pool.query('UPDATE user SET usr_name = ?, usr_email = ?, usr_ci = ? WHERE usr_id = ?', [result[0]["Asignado a"], email, result[0]["Username"], user[0].usr_id]);
         }
         res.json({glpi: result})
     }
