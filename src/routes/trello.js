@@ -49,37 +49,42 @@ router.post('/post_card', async (req, res) => {
     const {tic_id} = req.body;
     const ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = '+ tic_id)
     if(ticket.length > 0){
-        const email = 'eleon@intelix.biz'
-        //const email = (await pool.query('SELECT * FROM user WHERE `usr_ci` = '+ticket[0].tic_usr_ci))[0].usr_email
-        if(ticket[0].tic_card_id == null){
-            const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
-            if(branch[0].board_custom_create == 1){
-                try {
-                    card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
-                    await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
-                        [card.id, tic_id]);
-                    await addMember(email, card.id)
-                    res.send("CREADA")
-                } catch(err) {
-                    printError(err);
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
+        //const email = 'eleon@intelix.biz'
+        let email = (await pool.query('SELECT * FROM user WHERE `usr_ci` = '+ticket[0].tic_usr_ci))
+        if(email.length!=0){
+            email = email[0].usr_email
+            if(ticket[0].tic_card_id == null){
+                const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
+                if(branch[0].board_custom_create == 1){
+                    try {
+                        card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
+                            [card.id, tic_id]);
+                        await addMember(email, card.id)
+                        res.send("CREADA")
+                    } catch(err) {
+                        printError(err);
+                        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
+                    }
+                }else{
+                    await createCustomFields(branch[0].board_id)
+                    await pool.query('UPDATE branch SET board_custom_create = ?  WHERE ram_id = ?',
+                            [1, branch[0].ram_id])
+                    try {
+                        card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
+                            [card.id, tic_id])
+                        res.send("CREADA")
+                    } catch(err) {
+                        printError(err);
+                        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
+                    }
                 }
             }else{
-                await createCustomFields(branch[0].board_id)
-                await pool.query('UPDATE branch SET board_custom_create = ?  WHERE ram_id = ?',
-                        [1, branch[0].ram_id])
-                try {
-                    card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
-                    await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
-                        [card.id, tic_id])
-                    res.send("CREADA")
-                } catch(err) {
-                    printError(err);
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
-                }
+                res.send("CREADA")
             }
         }else{
-            res.send("CREADA")
+            res.send("ERROR")
         }
     }else{
         res.send("ERROR")

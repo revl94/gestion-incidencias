@@ -63,13 +63,15 @@ router.get('/get_ticket/:id', async (req, res) => {
             await pool.query('UPDATE tickets SET tic_title = ?, tic_description = ?, tic_branch = ?, tic_subsidiary = ?, tic_deparment = ?, tic_usr_ci = ?, tic_category = ?, tic_priority = ?, tic_assigned_to = ?, tic_date = ?, tic_last_update_date = ?, tic_closing_date = ?, tic_sol_date = ?  WHERE tic_id = ?',
                 [ result[0]["Título"], result[0]["Descripción"], result[0]["Ramo"], result[0]["Sucursal"], result[0]["Departamento"], result[0]["Username"], result[0]["Categoría"], result[0]["Prioridad"], result[0]["Asignado a"], result[0]["Fecha Solicitud"], result[0]["Fecha Último Cambio"], result[0]["Fecha Cierre"], result[0]["Fecha Solución"], result[0]["Id Ticket"] ])
         }
+        /*
+        Este bloque trae el usuario de GLPI, para actualizar o insertar en la BD del proyecto
         const user = await pool.query('SELECT * FROM user WHERE usr_ci = ' + result[0]["Username"]);
         const email = (await glpi.query('SELECT (SELECT `email` FROM `glpidb`.`glpi_useremails` WHERE `glpidb`.`glpi_useremails`.`id` = `glpidb`.`glpi_users`.`id`) AS `email` FROM `glpidb`.`glpi_users` WHERE `name` =' + result[0]["Username"]))[0].email;
         if(user.length == 0){
             await pool.query('INSERT INTO user SET ?', {"usr_name": result[0]["Asignado a"], "usr_email": email, "usr_ci": result[0]["Username"]})
         }else{
             await pool.query('UPDATE user SET usr_name = ?, usr_email = ?, usr_ci = ? WHERE usr_id = ?', [result[0]["Asignado a"], email, result[0]["Username"], user[0].usr_id]);
-        }
+        }*/
         res.json({glpi: result})
     }
 });
@@ -135,40 +137,50 @@ router.get('/get_hours/:id', async (req, res) => {
         }
     }
 });
-router.get('/process_ticket/:id', async (req, res) => {
+
+router.get('/create_ticket/:id', async (req, res) => {
     const { id } = req.params
     const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
     if(ticket.length == 0){
         res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
     }else{
-        const getticket = await Backend.get('/tickets/get_ticket/'+id);
-        if(getticket != "ERROR"){
-            const hours = await Backend.get('/tickets/get_hours/'+id);
+        if(ticket[0].tic_card_id == null){
+            Backend.post('/trello/post_card',{
+                "tic_id": id}).then(async (response) => {
+                if(response.data != "ERROR"){
+                    const updatecard = await Backend.get('/trello/update_card/'+id);
+                    res.send("LISTO")
+                    res.send("Se creo la tarjeta en Trello exitosamente")
+                }else{
+                    res.send("Faltan datos para poder actualizar el ticket o los mismos son erroneos, por favor verifique la informacion y vuelva a intentar")
+                }
+            }).catch(e => {
+                console.log(e);
+                res.send("Error en Trello, no se pudieron crear las cartas.")
+            });
+        }else{
+            res.send("La tarjeta ya se encuentra creada en Trello")
+        }
+    }
+});
+router.get('/update_ticket/:id', async (req, res) => {
+    const { id } = req.params
+    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id +' AND `tic_card_id` IS NOT  NULL')
+    if(ticket.length == 0){
+        res.send("Ticket no inicializado. Debe inicializar el ticket para poder procesarlo")
+    }else{
+        const hours = await Backend.get('/tickets/get_hours/'+id);
             if(hours != "ERROR"){
                 if(ticket[0].tic_card_id != null){
                     const updatecard = await Backend.get('/trello/update_card/'+id);
                     res.send("LISTO")
                 }else{
-                    Backend.post('/trello/post_card',{
-                        "tic_id": id}).then(async (response) => {
-                        if(response.data != "ERROR"){
-                            const updatecard = await Backend.get('/trello/update_card/'+id);
-                            res.send("LISTO")
-                        }else{
-                            res.send("Faltan datos para poder procesar el ticket o los mismos son erroneos, por favor verifique la informacion y vuelva a intentar")
-                        }
-                    }).catch(e => {
-                        console.log(e);
-                        res.send("Error en Trello, no se pudieron crear las cartas.")
-                    });
+                    res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
                 }
                 
             }else{
                 res.send("Error en clockify, verifique la informacion del usuario.")
             }
-        }else{
-            res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
-        }
     }
 });
 function getUserID(email) {
