@@ -254,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `tic_last_update_date` date DEFAULT NULL,
   `tic_sol_date` date DEFAULT NULL,
   `tic_closing_date` date DEFAULT NULL,
-  `tic_clockify_time` time DEFAULT NULL,
+  `tic_clockify_time` time DEFAULT '00:00:00',
   `tic_sla` int(11) DEFAULT NULL,
   `tic_card_id` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`tic_id`)
