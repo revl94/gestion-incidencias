@@ -183,6 +183,7 @@ router.get('/update_ticket/:id', async (req, res) => {
             }
     }
 });
+
 function getUserID(email) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -213,6 +214,7 @@ function getTimeEntries(userId, descp) {
         }
     });
 }
+
 function checkH(duration) {
     return duration.indexOf("H");
 }
@@ -224,6 +226,7 @@ function checkM(duration) {
 function checkS(duration) {
     return duration.indexOf("S");
 }
+
 function formatTime(isH, isM, isS) {
     hours= 0
     seconds= 0
@@ -264,6 +267,30 @@ function formatTime(isH, isM, isS) {
     let time = [hours, minutes, seconds]
     return time
 }
+
+// Funcion para actualizar a las 12 AM
+async function fillAllData(){
+    const tickets = await pool.query('SELECT * FROM tickets')
+    let hours;
+    tickets.forEach( async (ticket) =>{
+        hours = await Backend.get('/tickets/get_hours/'+ticket.tic_id);
+        console.log("Tickect #"+ticket.tic_id+": hora actualizada")
+        if(hours != "ERROR" && ticket.tic_card_id != null){
+            const updatecard = await Backend.get('/trello/update_card/'+ticket.tic_id);
+            console.log("Tickect #"+ticket.tic_id+": carta actualizada")
+        }
+    })
+}
+const interval_long =  60*60*1000;//1 hora
+async function timer(interval_long){
+    var date = new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}); // Create a Date object to find out what time it is
+    if(date.substring(10,12) == 12 && date.substring(19,22) == "AM"){ // Check the time at 12:00am
+        await fillAllData()
+    }
+    setTimeout(function(){ timer(interval_long); }, interval_long);//Renew timer
+}
+timer(interval_long)
+
 //Funcion para imprimir errores
 function printError(e){
     if(e!=null){
