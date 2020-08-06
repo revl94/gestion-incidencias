@@ -14,9 +14,20 @@ const keyAndToken = '?key=5d94aa42b86a6f4e11d7cd857ff8699a&token=22b262d7b19e02d
 
 //Rutas
 router.get('/post_board', async (req, res) => {
-    const nombre= "PruebaName";
+
+    const cardId = "5f2c7177092431578a66a0e6";
+    const labelId = "5f2c6cfe387b09205c69fa0b"; // label verde
+    // const labelId = "5f2c6cfed5c12947ebaeecc7"; //label amarillo
+    // const labelId = "5f2c6cff919029150b4dc490"; //label rojo
+    const listId = "5f2c70b1790f8b33013901e7";
+
    try {
-      board = await createBoard(nombre);
+      // board = await createLabel(idBoard);
+      // console.log(board[0].id);
+      //  console.log(board[1].id);
+      //  console.log(board[2].id);
+       board = await removeLabelToCard(cardId, labelId);
+      // board = await createCard(listId, "Preuba card2", "Hello")
        res.json({
            board
        })
@@ -49,37 +60,42 @@ router.post('/post_card', async (req, res) => {
     const {tic_id} = req.body;
     const ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = '+ tic_id)
     if(ticket.length > 0){
-        const email = 'eleon@intelix.biz'
-        //const email = (await pool.query('SELECT * FROM user WHERE `usr_ci` = '+ticket[0].tic_usr_ci))[0].usr_email
-        if(ticket[0].tic_card_id == null){
-            const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
-            if(branch[0].board_custom_create == 1){
-                try {
-                    card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
-                    await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
-                        [card.id, tic_id]);
-                    await addMember(email, card.id)
-                    res.send("CREADA")
-                } catch(err) {
-                    printError(err);
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
+        //const email = 'eleon@intelix.biz'
+        let email = (await pool.query('SELECT * FROM user WHERE `usr_ci` = '+ticket[0].tic_usr_ci))
+        if(email.length!=0){
+            email = email[0].usr_email
+            if(ticket[0].tic_card_id == null){
+                const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
+                if(branch[0].board_custom_create == 1){
+                    try {
+                        card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
+                            [card.id, tic_id]);
+                        await addMember(email, card.id)
+                        res.send("CREADA")
+                    } catch(err) {
+                        printError(err);
+                        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
+                    }
+                }else{
+                    await createCustomFields(branch[0].board_id)
+                    await pool.query('UPDATE branch SET board_custom_create = ?  WHERE ram_id = ?',
+                        [1, branch[0].ram_id])
+                    try {
+                        card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
+                            [card.id, tic_id])
+                        res.send("CREADA")
+                    } catch(err) {
+                        printError(err);
+                        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
+                    }
                 }
             }else{
-                await createCustomFields(branch[0].board_id)
-                await pool.query('UPDATE branch SET board_custom_create = ?  WHERE ram_id = ?',
-                        [1, branch[0].ram_id])
-                try {
-                    card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
-                    await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
-                        [card.id, tic_id])
-                    res.send("CREADA")
-                } catch(err) {
-                    printError(err);
-                    res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
-                }
+                res.send("CREADA")
             }
         }else{
-            res.send("CREADA")
+            res.send("ERROR")
         }
     }else{
         res.send("ERROR")
@@ -97,6 +113,30 @@ router.get('/update_card/:id', async (req, res) => {
         res.send("ERROR")
     }
 });
+
+// Ruta para crear los labels
+router.get('/post_label/:idBoard', async (req, res) => {
+    const { idBoard } = req.params;  //"5f21ba1b3ebc598396b5bf29";
+    const branch = await pool.query(`SELECT ram_id FROM branch WHERE board_id = '${idBoard}'`);
+
+    try {
+        board = await createLabel(idBoard);
+         console.log(board[0].id);
+         console.log(board[1].id);
+         console.log(board[2].id);
+         await pool.query('INSERT INTO label_trello SET ?', { "lab_0_or_2": board[0].id ,
+            "lab_2_or_5": board[1].id, "lab_5_or_more": board[2].id, "branch_id": branch[0]});
+
+        res.json({
+            board
+        })
+
+    } catch(err) {
+        printError(err);
+        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
+    }
+});
+
 // Funcion para crear un board
 function createBoard(name) {
     return new Promise(async (resolve, reject) => {
@@ -247,6 +287,77 @@ function createCustomFields(boardId) {
   }
   return "ACTUALIZADO";
   }
+
+// Funcion para crear un label
+function createLabel( idBoard ) {
+
+    const labelName1= "De 0 a 2 dias";
+    const color1 = "green";
+    const labelName2= "De 2 a 5 dias";
+    const color2 = "orange";
+    const labelName3= "Mas de 5 dias";
+    const color3 = "red";
+
+    return new Promise(async (resolve,reject) => {
+
+        try {
+
+            const label1 = await TrelloAxios.post(`/labels${keyAndToken}`, {"name": labelName1,"color": color1, "idBoard": idBoard});
+            const label2 = await TrelloAxios.post(`/labels${keyAndToken}`, {"name": labelName2,"color": color2, "idBoard": idBoard});
+            const label3 = await TrelloAxios.post(`/labels${keyAndToken}`, {"name": labelName3,"color": color3, "idBoard": idBoard});
+
+            resolve([label1.data, label2.data, label3.data])
+        } catch (error) {
+            reject(error)
+        }
+    });
+}
+
+// Agregar label a un card
+function addLabelToCard( cardId, labelId ) {
+
+    return new Promise(async (resolve,reject) => {
+
+        try {
+            const add = await TrelloAxios.post(`/cards/${cardId}/idLabels${keyAndToken}`, { "value": labelId });
+            resolve(add.data)
+        } catch (error) {
+            reject(error)
+        }
+    });
+}
+
+// Remover label a un card
+function removeLabelToCard( cardId, labelId ) {
+
+    return new Promise(async (resolve,reject) => {
+
+        try {
+            const remove = await TrelloAxios.delete(`/cards/${cardId}/idLabels/${labelId}${keyAndToken}`);
+            resolve(remove.data)
+        } catch (error) {
+            reject(error)
+        }
+    });
+}
+
+
+// Obtener labels de un board
+function getLabels( boardId ) {
+    return new Promise(async (resolve,reject) => {
+
+        try {
+
+            const labels = await TrelloAxios.get(`/boards/${boardId}/labels${keyAndToken}`);
+            resolve(labels.data)
+        } catch (error) {
+            reject(error)
+        }
+    });
+
+}
+
+
 //Funcion para imprimir errores
 function printError(e){
     if(e!=null){
