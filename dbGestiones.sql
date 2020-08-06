@@ -51,30 +51,32 @@ CONSTRAINT `request_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`) O
 -- Volcando datos para la tabla dbgestionocupacion.activities: ~24 rows (aproximadamente)
 /*!40000 ALTER TABLE `activities` DISABLE KEYS */;
 REPLACE INTO `activities` (`act_id`, `req_id`, `act_trello_name`, `act_description_trello`, `act_card_id`, `act_init_date`, `act_init_real_date`, `act_end_date`, `act_real_end_date`, `act_estimated_hours`, `act_desv_percentage`, `act_day_desv`, `act_id_parent`, `act_id_parent2`, `act_id_prelacion`, `act_id_project_task`, `act_id_user_trello`, `act_time_loaded`, `act_status`, `act_porcent`, `act_title`, `act_mail`, `act_trello_user`) VALUES
-(49, 52, 'LOG-MA15-Modelo de Existencia y Disponibilidad', NULL, NULL, '2020-06-01 08:00:00', NULL, '2020-06-26 12:00:00', NULL, 240, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-(50, 52, 'Inicio solicitud', NULL, '5f22f6f1e7af5a74227ea95d', '2020-06-01 08:00:00', NULL, '2020-06-05 17:00:00', NULL, 40, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(51, 52, 'Existencia Propia y Proveedor', NULL, NULL, '2020-06-08 08:00:00', NULL, '2020-06-12 12:00:00', NULL, 68, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-(52, 52, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f22f6ef5bda30039244252e', '2020-06-08 08:00:00', NULL, '2020-06-10 17:00:00', NULL, 36, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-(53, 52, 'Creación de nuevos tipos de ajuste', NULL, '5f22f6ef6051d74bb7c929c6', '2020-06-08 08:00:00', NULL, '2020-06-08 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(54, 52, 'Validación y completación para los nuevos tipos de ajuste', NULL, '5f22f6f04050262a4dd5cba3', '2020-06-09 08:00:00', '2020-07-06 16:00:00', '2020-06-10 17:00:00', '2020-07-09 16:00:00', 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.8, 'Active', 50, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(55, 52, 'Modificación en réplica de Ajuste para llevar data a LEGACY', NULL, '5f22f6f0cdb01a26fb110de0', '2020-06-08 08:00:00', NULL, '2020-06-09 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(56, 52, 'Implementación de ventas propias y proveedor', NULL, NULL, '2020-06-09 13:00:00', NULL, '2020-06-10 17:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-(57, 52, 'Ventas propias', NULL, '5f22f6f04c70c160272436d3', '2020-06-09 13:00:00', NULL, '2020-06-10 10:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(58, 52, 'Ventas proveedor', NULL, '5f22f6ee9a23ff513107d8f5', '2020-06-10 10:00:00', NULL, '2020-06-10 17:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(59, 52, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f22f6ef5bda30039244252e', '2020-06-11 08:00:00', NULL, '2020-06-11 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 60, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(60, 52, 'Implementación de réplica que calcule y almacene las unidades necesarias para la Existencia propia y proveedor en la nueva tabla', NULL, '5f22f6ee8d2fb88b8cae518d', '2020-06-11 08:00:00', NULL, '2020-06-12 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', '', 'Enmanuel Leon'),
-(61, 52, 'Disponibilidad Propia', NULL, NULL, '2020-06-12 08:00:00', NULL, '2020-06-18 12:00:00', NULL, 64, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-(62, 52, 'Implementación de Fórmula de Existencia propia', NULL, '5f22f6ef7179437de221ff82', '2020-06-12 08:00:00', NULL, '2020-06-15 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(63, 52, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f22f6f0a229662e083e8860', '2020-06-12 13:00:00', NULL, '2020-06-16 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(64, 52, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f22f6f0a229662e083e8860', '2020-06-16 08:00:00', NULL, '2020-06-17 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(65, 52, 'Implementación de Función de Disponibilidad Propia', NULL, '5f22f6ef7e47e883f55b02cf', '2020-06-16 13:00:00', NULL, '2020-06-18 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(66, 52, 'Disponibilidad Proveedor', NULL, NULL, '2020-06-18 08:00:00', NULL, '2020-06-25 12:00:00', NULL, 60, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-(67, 52, 'Implementación de Fórmula de Existencia proveedor2', NULL, '5f22f6ef405ff271ae198724', '2020-06-18 08:00:00', NULL, '2020-06-19 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(68, 52, 'Implementación de Fórmula de Mercancia en cuarentena proveedor', NULL, '5f22f6f0afcac48a5c994d38', '2020-06-18 13:00:00', NULL, '2020-06-22 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 10, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(69, 52, 'Implementación de Fórmula de Ventas proveedor en tránsito', NULL, '5f22f6eff835956a8869eddd', '2020-06-19 13:00:00', NULL, '2020-06-23 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 50, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(70, 52, 'Implementación de Función de Disponibilidad Proveedor', NULL, '5f22f6efa748087b03432307', '2020-06-22 13:00:00', NULL, '2020-06-25 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 51, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-(71, 52, 'Disponibilidad Total', NULL, NULL, '2020-06-25 13:00:00', NULL, '2020-06-26 12:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-(72, 52, 'Implementación de Función de Disponibilidad Total', NULL, '5f22f6ef2977f88e09e242eb', '2020-06-25 13:00:00', NULL, '2020-06-26 12:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon');
+
+   (49, 52, 'LOG-MA15-Modelo de Existencia y Disponibilidad', NULL, NULL, '2020-06-01 08:00:00', NULL, '2020-06-26 12:00:00', NULL, 240, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(50, 52, 'Inicio solicitud', NULL, '5f22f6f1e7af5a74227ea95d', '2020-06-01 08:00:00', NULL, '2020-06-05 17:00:00', NULL, 40, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(51, 52, 'Existencia Propia y Proveedor', NULL, NULL, '2020-06-08 08:00:00', NULL, '2020-06-12 12:00:00', NULL, 68, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(52, 52, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f22f6ef5bda30039244252e', '2020-06-08 08:00:00', NULL, '2020-06-10 17:00:00', NULL, 36, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(53, 52, 'Creación de nuevos tipos de ajuste', NULL, '5f22f6ef6051d74bb7c929c6', '2020-06-08 08:00:00', NULL, '2020-06-08 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(54, 52, 'Validación y completación para los nuevos tipos de ajuste', NULL, '5f22f6f04050262a4dd5cba3', '2020-06-09 08:00:00', '2020-07-06 16:00:00', '2020-06-10 17:00:00', '2020-07-09 16:00:00', 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.8, 'Active', 50, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(55, 52, 'Modificación en réplica de Ajuste para llevar data a LEGACY', NULL, '5f22f6f0cdb01a26fb110de0', '2020-06-08 08:00:00', NULL, '2020-06-09 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(56, 52, 'Implementación de ventas propias y proveedor', NULL, NULL, '2020-06-09 13:00:00', NULL, '2020-06-10 17:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(57, 52, 'Ventas propias', NULL, '5f22f6f04c70c160272436d3', '2020-06-09 13:00:00', NULL, '2020-06-10 10:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(58, 52, 'Ventas proveedor', NULL, '5f22f6ee9a23ff513107d8f5', '2020-06-10 10:00:00', NULL, '2020-06-10 17:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(59, 52, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f22f6ef5bda30039244252e', '2020-06-11 08:00:00', NULL, '2020-06-11 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 60, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(60, 52, 'Implementación de réplica que calcule y almacene las unidades necesarias para la Existencia propia y proveedor en la nueva tabla', NULL, '5f22f6ee8d2fb88b8cae518d', '2020-06-11 08:00:00', NULL, '2020-06-12 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', '', 'Enmanuel Leon'),
+	(61, 52, 'Disponibilidad Propia', NULL, NULL, '2020-06-12 08:00:00', NULL, '2020-06-18 12:00:00', NULL, 64, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(62, 52, 'Implementación de Fórmula de Existencia propia', NULL, '5f22f6ef7179437de221ff82', '2020-06-12 08:00:00', NULL, '2020-06-15 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(63, 52, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f22f6f0a229662e083e8860', '2020-06-12 13:00:00', NULL, '2020-06-16 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(64, 52, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f22f6f0a229662e083e8860', '2020-06-16 08:00:00', NULL, '2020-06-17 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(65, 52, 'Implementación de Función de Disponibilidad Propia', NULL, '5f22f6ef7e47e883f55b02cf', '2020-06-16 13:00:00', NULL, '2020-06-18 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(66, 52, 'Disponibilidad Proveedor', NULL, NULL, '2020-06-18 08:00:00', NULL, '2020-06-25 12:00:00', NULL, 60, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(67, 52, 'Implementación de Fórmula de Existencia proveedor2', NULL, '5f22f6ef405ff271ae198724', '2020-06-18 08:00:00', NULL, '2020-06-19 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(68, 52, 'Implementación de Fórmula de Mercancia en cuarentena proveedor', NULL, '5f22f6f0afcac48a5c994d38', '2020-06-18 13:00:00', NULL, '2020-06-22 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 10, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(69, 52, 'Implementación de Fórmula de Ventas proveedor en tránsito', NULL, '5f22f6eff835956a8869eddd', '2020-06-19 13:00:00', NULL, '2020-06-23 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 50, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(70, 52, 'Implementación de Función de Disponibilidad Proveedor', NULL, '5f22f6efa748087b03432307', '2020-06-22 13:00:00', NULL, '2020-06-25 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 51, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(71, 52, 'Disponibilidad Total', NULL, NULL, '2020-06-25 13:00:00', NULL, '2020-06-26 12:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(72, 52, 'Implementación de Función de Disponibilidad Total', NULL, '5f22f6ef2977f88e09e242eb', '2020-06-25 13:00:00', NULL, '2020-06-26 12:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon');
+
 /*!40000 ALTER TABLE `activities` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.booking
@@ -100,13 +102,14 @@ CONSTRAINT `usr_id` FOREIGN KEY (`usr_id`) REFERENCES `user` (`usr_id`) ON DELET
 -- Volcando datos para la tabla dbgestionocupacion.booking: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
 REPLACE INTO `booking` (`boo_id`, `cli_id`, `req_id`, `usr_id`, `boo_duration`, `boo_start_date`, `boo_end_date`, `boo_percentage`) VALUES
-(1, 1, 47, 1, NULL, '2020-07-01', '2020-08-08', 50),
-(3, 1, 47, 2, NULL, '2020-07-29', '2020-08-08', 50),
-(4, 1, 45, 2, NULL, '2020-07-28', '2020-08-04', 50),
-(5, 1, 45, 3, NULL, '2020-07-28', '2020-08-13', 80),
-(6, 1, 51, 4, NULL, '2020-07-29', '2020-08-11', 100),
-(7, 1, 48, 6, NULL, '2020-07-29', '2020-08-12', 20),
-(8, 1, 48, 5, NULL, '2020-07-28', '2020-08-07', 20);
+
+	(1, 1, 47, 1, NULL, '2020-07-01', '2020-08-08', 50),
+	(3, 1, 47, 2, NULL, '2020-07-29', '2020-08-08', 50),
+	(4, 1, 45, 2, NULL, '2020-07-28', '2020-08-04', 50),
+	(5, 1, 45, 3, NULL, '2020-07-28', '2020-08-13', 80),
+	(6, 1, 51, 4, NULL, '2020-07-29', '2020-08-11', 100),
+	(7, 1, 48, 6, NULL, '2020-07-29', '2020-08-12', 20),
+	(8, 1, 48, 5, NULL, '2020-07-28', '2020-08-07', 20);
 
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 
@@ -149,7 +152,9 @@ PRIMARY KEY (`cli_id`)
 -- Volcando datos para la tabla dbgestionocupacion.client: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `client` DISABLE KEYS */;
 REPLACE INTO `client` (`cli_id`, `cli_name`) VALUES
-(1, 'Mayoreo');
+
+	(1, 'Mayoreo');
+
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.clockify_task
@@ -225,39 +230,44 @@ CONSTRAINT `client_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`) ON 
 -- Volcando datos para la tabla dbgestionocupacion.request: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
 REPLACE INTO `request` (`req_id`, `board_id`, `project_id`, `task_id`, `req_ms_project`, `cli_id`, `coa_id`, `req_title`, `req_description`, `req_responsable`, `req_order_priority`, `req_date`, `req_init_date`, `req_final_date`, `req_real_final_date`, `sta_id`, `req_advance_ptge`, `req_deviations_ptge`, `req_client_completed_deliverables`, `req_client_pending_activities`, `req_client_comments`, `req_intelix_completed_deliverables`, `req_intelix_pending_activities`, `req_intelix_comments`, `req_last_update_date`, `rty_id`, `tea_id`, `req_comitee`, `req_comitee_points_discuss`, `req_day_desv`, `req_cargar`) VALUES
-(40, '5ee2fe80dd1a4b0ca12b8514', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 13', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 67, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 'false'),
-(45, '5ecc545f367f7d139208c139', NULL, NULL, NULL, 1, NULL, 'Centro de Desarrollo - Productos Intelix Capítulo ABX', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 13, 34, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, 'false'),
-(46, '5ee2f4d36ec4910464b7e906', NULL, NULL, NULL, 1, NULL, 'preuba12', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 45, 23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 'false'),
-(47, '5ed18e8039bdeb21ec923c5e', NULL, NULL, NULL, 1, NULL, 'Modificaciones de la página Web de Beconsult', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 34, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 'false'),
-(48, '5edb080749b93c4eb29534ea', NULL, NULL, NULL, 1, NULL, 'Prueba', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 22, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 33, 'false'),
-(49, '5ee3b950f3ce406448212735', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 14', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 14, 23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 45, 'false'),
-(50, '5ef232463d057744796935ce', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 15', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 30, 54, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 23, 'false'),
-(51, '', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'Prueba 17', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 20, 76, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 56, 'false'),
-(52, '5f22f59bf88a9a121c1cf35e', NULL, NULL, 'Gestion de solicitudes.mpp', 1, NULL, 'Gestion de solicitudes', NULL, NULL, NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 20, 76, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 56, 'true');
+
+
+	(40, '5ee2fe80dd1a4b0ca12b8514', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 13', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 67, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 'false'),
+	(45, '5ecc545f367f7d139208c139', NULL, NULL, NULL, 1, NULL, 'Centro de Desarrollo - Productos Intelix Capítulo ABX', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 13, 34, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, 'false'),
+	(46, '5ee2f4d36ec4910464b7e906', NULL, NULL, NULL, 1, NULL, 'preuba12', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 45, 23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 'false'),
+	(47, '5ed18e8039bdeb21ec923c5e', NULL, NULL, NULL, 1, NULL, 'Modificaciones de la página Web de Beconsult', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 34, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 'false'),
+	(48, '5edb080749b93c4eb29534ea', NULL, NULL, NULL, 1, NULL, 'Prueba', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 22, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 33, 'false'),
+	(49, '5ee3b950f3ce406448212735', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 14', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 14, 23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 45, 'false'),
+	(50, '5ef232463d057744796935ce', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 15', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 30, 54, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 23, 'false'),
+	(51, '', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'Prueba 17', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 20, 76, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 56, 'false'),
+	(52, '5f22f59bf88a9a121c1cf35e', NULL, NULL, 'Gestion de solicitudes.mpp', 1, NULL, 'Gestion de solicitudes', NULL, NULL, NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 20, 76, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 56, 'true');
+
 
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.tickets
 DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE IF NOT EXISTS `tickets` (
-`tic_id` int(11) NOT NULL AUTO_INCREMENT,
-`tic_title` varchar(200) DEFAULT NULL,
-`tic_description` mediumtext,
-`tic_branch` varchar(45) DEFAULT NULL,
-`tic_subsidiary` varchar(45) DEFAULT NULL,
-`tic_deparment` varchar(45) DEFAULT NULL,
-`tic_usr_ci` varchar(20) DEFAULT NULL,
-`tic_category` varchar(255) DEFAULT NULL,
-`tic_priority` varchar(15) DEFAULT NULL,
-`tic_assigned_to` varchar(255) DEFAULT NULL,
-`tic_date` date DEFAULT NULL,
-`tic_last_update_date` date DEFAULT NULL,
-`tic_sol_date` date DEFAULT NULL,
-`tic_closing_date` date DEFAULT NULL,
-`tic_clockify_time` time DEFAULT '00:00:00',
-`tic_sla` int(11) DEFAULT NULL,
-`tic_card_id` varchar(45) DEFAULT NULL,
-PRIMARY KEY (`tic_id`)
+
+  `tic_id` int(11) NOT NULL AUTO_INCREMENT,
+  `tic_title` varchar(200) DEFAULT NULL,
+  `tic_description` mediumtext,
+  `tic_branch` varchar(45) DEFAULT NULL,
+  `tic_subsidiary` varchar(45) DEFAULT NULL,
+  `tic_deparment` varchar(45) DEFAULT NULL,
+  `tic_usr_ci` varchar(20) DEFAULT NULL,
+  `tic_category` varchar(255) DEFAULT NULL,
+  `tic_priority` varchar(15) DEFAULT NULL,
+  `tic_assigned_to` varchar(255) DEFAULT NULL,
+  `tic_date` date DEFAULT NULL,
+  `tic_last_update_date` date DEFAULT NULL,
+  `tic_sol_date` date DEFAULT NULL,
+  `tic_closing_date` date DEFAULT NULL,
+  `tic_clockify_time` time DEFAULT '00:00:00',
+  `tic_sla` int(11) DEFAULT NULL,
+  `tic_card_id` varchar(45) DEFAULT NULL,
+  PRIMARY KEY (`tic_id`)
+
 ) ENGINE=InnoDB AUTO_INCREMENT=1911030009 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.tickets: ~1 rows (aproximadamente)
@@ -281,15 +291,17 @@ PRIMARY KEY (`usr_id`)
 -- Volcando datos para la tabla dbgestionocupacion.user: ~3 rows (aproximadamente)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 REPLACE INTO `user` (`usr_id`, `usr_name`, `usr_email`, `usr_ci`, `usr_id_trello`, `usr_id_clockify`) VALUES
-(1, 'Enmanuel Leon', 'eleon@intelix.biz', NULL, NULL, NULL),
-(2, 'Alejandro Sanchez', 'asanchezb@intelix.biz', NULL, NULL, NULL),
-(3, 'Alejandro Gonzalez', 'agonzalez@intelix.biz', NULL, NULL, NULL),
-(4, 'Angel Narvaez', 'anarvaez@intelix.biz', NULL, NULL, NULL),
-(5, 'Ramon Vielma', 'rvielma94@gmail.com', NULL, NULL, NULL),
-(6, 'Juan Rodriguez', 'juanchojjrc@gmail.com', NULL, NULL, NULL),
-(7, 'Enmanuel Leon', 'eleon@intelix.biz', NULL, NULL, NULL),
-(8, 'José José, González Rodríguez ( INT-VE-347 )', NULL, '14406213', NULL, NULL),
-(9, 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', NULL, '18760371', NULL, NULL);
+
+  (1, 'Enmanuel Leon', 'eleon@intelix.biz', NULL, NULL, NULL),
+	(2, 'Alejandro Sanchez', 'asanchezb@intelix.biz', NULL, NULL, NULL),
+	(3, 'Alejandro Gonzalez', 'agonzalez@intelix.biz', NULL, NULL, NULL),
+	(4, 'Angel Narvaez', 'anarvaez@intelix.biz', NULL, NULL, NULL),
+	(5, 'Ramon Vielma', 'rvielma94@gmail.com', NULL, NULL, NULL),
+	(6, 'Juan Rodriguez', 'juanchojjrc@gmail.com', NULL, NULL, NULL),
+	(7, 'Enmanuel Leon', 'eleon@intelix.biz', NULL, NULL, NULL),
+	(8, 'José José, González Rodríguez ( INT-VE-347 )', NULL, '14406213', NULL, NULL),
+	(9, 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', NULL, '18760371', NULL, NULL);
+
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.label_trello

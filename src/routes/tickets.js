@@ -170,17 +170,17 @@ router.get('/update_ticket/:id', async (req, res) => {
         res.send("Ticket no inicializado. Debe inicializar el ticket para poder procesarlo")
     }else{
         const hours = await Backend.get('/tickets/get_hours/'+id);
-        if(hours != "ERROR"){
-            if(ticket[0].tic_card_id != null){
-                const updatecard = await Backend.get('/trello/update_card/'+id);
-                res.send("LISTO")
+            if(hours != "ERROR"){
+                if(ticket[0].tic_card_id != null){
+                    const updatecard = await Backend.get('/trello/update_card/'+id);
+                    res.send("LISTO")
+                }else{
+                    res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
+                }
+                
             }else{
-                res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
+                res.send("Error en clockify, verifique la informacion del usuario.")
             }
-
-        }else{
-            res.send("Error en clockify, verifique la informacion del usuario.")
-        }
     }
 });
 
@@ -188,9 +188,9 @@ function getUserID(email) {
     return new Promise(async (resolve, reject) => {
         try {
             ClockifyAxios.get(`/workspaces/${workspaceId}/users?email=${email}`)
-                .then( (result) => {
-                    resolve(result.data);
-                }).catch((err) => {
+            .then( (result) => {
+                resolve(result.data);
+            }).catch((err) => {
                 resolve([]);
             });
         } catch (error) {
