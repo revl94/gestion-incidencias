@@ -13,12 +13,10 @@
 
 
 -- Volcando estructura de base de datos para dbgestionocupacion
-DROP DATABASE IF EXISTS `dbgestionocupacion`;
 CREATE DATABASE IF NOT EXISTS `dbgestionocupacion` /*!40100 DEFAULT CHARACTER SET utf8 */;
 USE `dbgestionocupacion`;
 
 -- Volcando estructura para tabla dbgestionocupacion.activities
-DROP TABLE IF EXISTS `activities`;
 CREATE TABLE IF NOT EXISTS `activities` (
   `act_id` int(11) NOT NULL AUTO_INCREMENT,
   `req_id` int(11) DEFAULT NULL,
@@ -46,9 +44,9 @@ CREATE TABLE IF NOT EXISTS `activities` (
   PRIMARY KEY (`act_id`),
   KEY `req_id_idx` (`req_id`),
   CONSTRAINT `request_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=793 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.activities: ~3 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.activities: ~24 rows (aproximadamente)
 /*!40000 ALTER TABLE `activities` DISABLE KEYS */;
 REPLACE INTO `activities` (`act_id`, `req_id`, `act_trello_name`, `act_description_trello`, `act_card_id`, `act_init_date`, `act_init_real_date`, `act_end_date`, `act_real_end_date`, `act_estimated_hours`, `act_desv_percentage`, `act_day_desv`, `act_id_parent`, `act_id_parent2`, `act_id_prelacion`, `act_id_project_task`, `act_id_user_trello`, `act_time_loaded`, `act_status`, `act_porcent`, `act_title`, `act_mail`, `act_trello_user`) VALUES
 	(49, 52, 'LOG-MA15-Modelo de Existencia y Disponibilidad', NULL, NULL, '2020-06-01 08:00:00', NULL, '2020-06-26 12:00:00', NULL, 240, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
@@ -78,7 +76,6 @@ REPLACE INTO `activities` (`act_id`, `req_id`, `act_trello_name`, `act_descripti
 /*!40000 ALTER TABLE `activities` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.booking
-DROP TABLE IF EXISTS `booking`;
 CREATE TABLE IF NOT EXISTS `booking` (
   `boo_id` int(11) NOT NULL AUTO_INCREMENT,
   `cli_id` int(11) NOT NULL,
@@ -110,7 +107,6 @@ REPLACE INTO `booking` (`boo_id`, `cli_id`, `req_id`, `usr_id`, `boo_duration`, 
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.branch
-DROP TABLE IF EXISTS `branch`;
 CREATE TABLE IF NOT EXISTS `branch` (
   `ram_id` int(11) NOT NULL AUTO_INCREMENT,
   `ram_name` varchar(45) DEFAULT NULL,
@@ -131,14 +127,13 @@ REPLACE INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`, `board_custo
 	(6, 'Ramo Inmobiliario', '5f2436f8d5b1cc2f4063cc27', '5f2444d399415a5534f90f03', '0'),
 	(7, 'Ramo Logistico', '5f243705405e220adbe09766', '5f2444a8abdafe539df04b0d', '0'),
 	(8, 'Beconsult', '5f24371e4d21a37e8cc86b98', '5f2444a2e99e7a0c2a6b2d4c', '0'),
-	(9, 'EPA', '5f24372d34e3d37452093fab', '5f24449a01cb8a7c0c3aa697', '0'),
+	(9, 'EPA', '5f2d5166c685dd19fcf2e5c5', '5f2d517631f0fc226ffadc0b', '1'),
 	(10, 'Ramo Automotriz', '5f24373aee52aa3102ab1e46', '5f2444902e44a25e241d8b31', '0'),
 	(11, 'Ramo Mayoreo', '5f24374b78e584792fee1a3d', '5f244488937cf95b50ca5156', '0'),
 	(12, 'Intelix', '5f2437597b3dd65a06fc4473', '5f2444822ec6ec870decbd9a', '0');
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.client
-DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
   `cli_id` int(11) NOT NULL AUTO_INCREMENT,
   `cli_name` varchar(45) NOT NULL,
@@ -152,7 +147,6 @@ REPLACE INTO `client` (`cli_id`, `cli_name`) VALUES
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.clockify_task
-DROP TABLE IF EXISTS `clockify_task`;
 CREATE TABLE IF NOT EXISTS `clockify_task` (
   `clo_id` int(11) NOT NULL AUTO_INCREMENT,
   `clo_task_name` varchar(45) DEFAULT NULL,
@@ -168,7 +162,6 @@ CREATE TABLE IF NOT EXISTS `clockify_task` (
 /*!40000 ALTER TABLE `clockify_task` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.database_reg
-DROP TABLE IF EXISTS `database_reg`;
 CREATE TABLE IF NOT EXISTS `database_reg` (
   `reg_id` int(11) NOT NULL AUTO_INCREMENT,
   `reg_update_time` datetime NOT NULL,
@@ -180,7 +173,6 @@ CREATE TABLE IF NOT EXISTS `database_reg` (
 /*!40000 ALTER TABLE `database_reg` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.label_trello
-DROP TABLE IF EXISTS `label_trello`;
 CREATE TABLE IF NOT EXISTS `label_trello` (
   `lab_id` int(11) NOT NULL AUTO_INCREMENT,
   `lab_0_or_2` varchar(45) DEFAULT NULL,
@@ -190,16 +182,16 @@ CREATE TABLE IF NOT EXISTS `label_trello` (
   PRIMARY KEY (`lab_id`),
   KEY `branch_id` (`branch_id`),
   CONSTRAINT `branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`ram_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.label_trello: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `label_trello` DISABLE KEYS */;
 REPLACE INTO `label_trello` (`lab_id`, `lab_0_or_2`, `lab_2_or_5`, `lab_5_or_more`, `branch_id`) VALUES
-	(4, '5f2cb13066b10d2cff1a8d10', '5f2cb1310f2cf71a0628f6ff', '5f2cb1313fadb65617b5a10d', 1);
+	(4, '5f2cb13066b10d2cff1a8d10', '5f2cb1310f2cf71a0628f6ff', '5f2cb1313fadb65617b5a10d', 1),
+	(5, '5f2d522b8d7b8e156e96759b', '5f2d522b31d7aa3b7b22c153', '5f2d522bf17b3a156e77da4c', 9);
 /*!40000 ALTER TABLE `label_trello` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.request
-DROP TABLE IF EXISTS `request`;
 CREATE TABLE IF NOT EXISTS `request` (
   `req_id` int(11) NOT NULL AUTO_INCREMENT,
   `board_id` varchar(50) DEFAULT NULL,
@@ -240,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `request` (
   CONSTRAINT `client_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
 ) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.request: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.request: ~9 rows (aproximadamente)
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
 REPLACE INTO `request` (`req_id`, `board_id`, `project_id`, `task_id`, `req_ms_project`, `cli_id`, `coa_id`, `req_title`, `req_description`, `req_responsable`, `req_order_priority`, `req_date`, `req_init_date`, `req_final_date`, `req_real_final_date`, `sta_id`, `req_advance_ptge`, `req_deviations_ptge`, `req_client_completed_deliverables`, `req_client_pending_activities`, `req_client_comments`, `req_intelix_completed_deliverables`, `req_intelix_pending_activities`, `req_intelix_comments`, `req_last_update_date`, `rty_id`, `tea_id`, `req_comitee`, `req_comitee_points_discuss`, `req_day_desv`, `req_cargar`) VALUES
 	(40, '5ee2fe80dd1a4b0ca12b8514', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 13', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 67, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 'false'),
@@ -255,7 +247,6 @@ REPLACE INTO `request` (`req_id`, `board_id`, `project_id`, `task_id`, `req_ms_p
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.tickets
-DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE IF NOT EXISTS `tickets` (
   `tic_id` int(11) NOT NULL AUTO_INCREMENT,
   `tic_title` varchar(200) DEFAULT NULL,
@@ -280,11 +271,11 @@ CREATE TABLE IF NOT EXISTS `tickets` (
 -- Volcando datos para la tabla dbgestionocupacion.tickets: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
 REPLACE INTO `tickets` (`tic_id`, `tic_title`, `tic_description`, `tic_branch`, `tic_subsidiary`, `tic_deparment`, `tic_usr_ci`, `tic_category`, `tic_priority`, `tic_assigned_to`, `tic_date`, `tic_last_update_date`, `tic_sol_date`, `tic_closing_date`, `tic_clockify_time`, `tic_sla`, `tic_card_id`) VALUES
+	(1911030006, 'Venezuela  Dif.Vtas02/10/2019-02/11/2019 - 509298', '&lt;pre&gt; FERRETERIA EPA, C.A.                 Venezuela                                               Pagina..:         1 RIF:                                                                                         Fecha...:   3/11/19 CONTROL/SVINV127                           Diferencias de Archivos de Ventas del 02/10/2019 al 02/11/2019                                                Tienda menos Central------------------------------------------------------------------------------------------------    Fecha      Tda           Ventas Netas                  Impuesto                Archivos Comparados------------------------------------------------------------------------------------------------------------------JU 24/10/2019  004                  17.025,00-                  2.724,01- TRANSA-DETALLE VS. TRCMOV-TRDMOVMA 22/10/2019  004                  29.875,00-                  4.780,00- TRANSA-DETALLE VS. TRCMOV-TRDMOVLU 21/10/2019  004                  46.900,00                   7.504,01  TRANSA-DETALLE VS. TRCMOV-TRDMOV------------------------------------------------------------------------------------------------------------------              ************************ FIN DEL REPORTE ************************&lt;/pre&gt;', 'EPA', 'EPAVE', 'OF/01', '9823764', 'Aplicaciones > Facturacion', 'High', 'Llovera Padron, Gerson Luis ( INT-VE-277 )', '2019-11-03', '2019-11-11', '2019-11-06', '2019-11-11', '00:00:00', NULL, '5f2d522c8bf3f32cf664c207'),
 	(1911030008, 'Fwd: equipos Laptops', '&lt;div dir="ltr"&gt;Buen Día Ana&lt;div&gt; &lt;/div&gt;&lt;div&gt;Merbelin y yo estaremos revisando la información y planificando los cambios necesarios.&lt;/div&gt;&lt;div&gt; &lt;/div&gt;&lt;div&gt;Cualquier duda te preguntamos&lt;/div&gt;&lt;div&gt;Saludos&lt;br /&gt;&lt;br /&gt;&lt;div class="gmail_quote"&gt;&lt;div class="gmail_attr" dir="ltr"&gt;---------- Forwarded message ---------&lt;br /&gt;De: &lt;strong class="gmail_sendername" dir="auto"&gt;Ana Sanz&lt;/strong&gt; &lt;span dir="auto"&gt;&lt;&lt;a href="mailto:asanz@capuy.com"&gt;asanz@capuy.com&lt;/a&gt;&gt;&lt;/span&gt;&lt;br /&gt;Date: sáb., 2 nov. 2019 a las 13:42&lt;br /&gt;Subject: equipos Laptops&lt;br /&gt;To: Nancy Gomez &lt;&lt;a href="mailto:ngomez@walkiria.biz"&gt;ngomez@walkiria.biz&lt;/a&gt;&gt;&lt;/div&gt;&lt;br /&gt;&lt;br /&gt;&lt;div dir="ltr"&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Hola Buenos dias &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Nancy los equipos  deben quedar así:&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Capuy/ usuarios:&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Laptop: Gabriel Hernandez (usa la que tenía en LPG)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Laptop: Asesor de ventas 1 (vacante)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- PC: Amarelis Graterol &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- PC: Reubicar para asesor 3. &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept CM / usuarios&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Liliana López (se queda con la que tenía en LM)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Reubicar las  PC hacia area de counter. (sólo hay 1) &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept LM&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Rossana Campo (usa una que estaba asignada a Capuy)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Isael Planas&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Maria Alessandra Alcedo&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;quitar la PC de tienda y disponerla para otra locación&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept LPG&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Nancy Arellano&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Marbely Peña&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Reubicar la PC a área de caja. (consultar si Nancy la usa o ella usa lapto) &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;En abstracta CCCT estamos OK&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;En abstracta LM con 5 estamos OK&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;2 en oficina. 1 en nivel 1 y 2 en PB que habría que reubicar. &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;por lo que podemos disponer del resto.&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Saludos,&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Ana &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div&gt;&lt;div dir="ltr" data-smartmail="gmail_signature"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div style="font-family: tahoma,sans-serif;"&gt;&lt;span style="color: #444444; font-size: small; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;Ana Sanz&lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Jefe de Ventas&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Abstracta - BoConcept - Capuy&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 212-526.67.72&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 414-293.88.95&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;&lt;a style="color: #1155cc;" href="http://www.beco.com.ve/" target="_blank" rel="noopener"&gt;www.becocompania.com.ve&lt;/a&gt; &lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div dir="ltr"&gt;&lt;p style="font-size: 12.8px;"&gt;&lt;img src="https://drive.google.com/a/capuy.com/uc?id=19OsxnkgmLYV3i6-2x7HzlEflTGe8hMqG&amp;export=download" alt="image" /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;br style="clear: both;" /&gt;&lt;div&gt; &lt;/div&gt;-- &lt;br /&gt;&lt;div class="gmail_signature" dir="ltr" data-smartmail="gmail_signature"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div style="font-size: 12.8px; font-family: tahoma,sans-serif;"&gt;&lt;span style="font-family: arial, helvetica, sans-serif;"&gt;&lt;span style="font-size: small; color: #444444;"&gt;&lt;strong&gt;Nancy Gómez&lt;/strong&gt;&lt;/span&gt;&lt;br /&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px; font-family: tahoma,sans-serif;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;Gerencia de Procesos de Sistemas&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-size: 12.8px;"&gt;&lt;span style="font-family: arial, helvetica, sans-serif;"&gt;+58 212-238.88.11 / ext. 2473&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;&lt;a style="color: #1155cc;" href="http://www.beco.com.ve/" target="_blank" rel="noopener"&gt;www.becocompania.com.ve&lt;/a&gt; &lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style="text-align: center;"&gt; &lt;/div&gt;&lt;div style="text-align: left;"&gt;&lt;img src="https://docs.google.com/uc?export=download&amp;id=172JG_4TbPPOrPDxLywI71VwldSn1oPKF&amp;revid=0B58Ka6L7w8a8MjVlb2xRSC94UTNpaTdRSGxZK1pUNzZMeEU4PQ" alt="image" /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;', 'Principal', 'Ramo Moda', 'Abstracta', '14406213', 'Computadores y Perifericos > Traslados/movimientos', 'Medium', 'José José, González Rodríguez ( INT-VE-347 )', '2019-11-03', '2020-02-18', '2020-02-12', '2020-02-18', '00:00:00', NULL, '5f2cb13205707b7ec6c42615');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.user
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `usr_id` int(11) NOT NULL AUTO_INCREMENT,
   `usr_name` varchar(45) DEFAULT NULL,
@@ -295,10 +286,10 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`usr_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.user: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.user: ~9 rows (aproximadamente)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 REPLACE INTO `user` (`usr_id`, `usr_name`, `usr_email`, `usr_ci`, `usr_id_trello`, `usr_id_clockify`) VALUES
-	(1, 'Enmanuel Leon', 'eleon@intelix.biz', NULL, NULL, NULL),
+	(1, 'Enmanuel Leon', 'eleon@intelix.biz', '9823764', NULL, NULL),
 	(2, 'Alejandro Sanchez', 'asanchezb@intelix.biz', NULL, NULL, NULL),
 	(3, 'Alejandro Gonzalez', 'agonzalez@intelix.biz', NULL, NULL, NULL),
 	(4, 'Angel Narvaez', 'anarvaez@intelix.biz', NULL, NULL, NULL),
