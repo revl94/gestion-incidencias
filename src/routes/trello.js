@@ -1,4 +1,5 @@
 const express = require('express');
+const DateDiff = require('date-diff');
 //Project's own requires
 const axios = require('axios');
 const pool = require('../../database');
@@ -13,31 +14,7 @@ TrelloAxios.defaults.headers.post['Content-Type'] = 'application/json';
 const keyAndToken = '?key=5d94aa42b86a6f4e11d7cd857ff8699a&token=22b262d7b19e02d785a2b1fa0ba982e55ab891122b07d7ff79ffda934f7a4e28';
 
 //Rutas
-router.get('/post_board', async (req, res) => {
-
-    const cardId = "5f2c7177092431578a66a0e6";
-    const labelId = "5f2c6cfe387b09205c69fa0b"; // label verde
-    // const labelId = "5f2c6cfed5c12947ebaeecc7"; //label amarillo
-    // const labelId = "5f2c6cff919029150b4dc490"; //label rojo
-    const listId = "5f2c70b1790f8b33013901e7";
-
-   try {
-      // board = await createLabel(idBoard);
-      // console.log(board[0].id);
-      //  console.log(board[1].id);
-      //  console.log(board[2].id);
-       board = await removeLabelToCard(cardId, labelId);
-      // board = await createCard(listId, "Preuba card2", "Hello")
-       res.json({
-           board
-       })
-
-   } catch(err) {
-        printError(err);
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
-}
-
-});
+//removeLabelToCard(cardId, labelId);
 // Ruta para Crear lista sobre un board indicado
 router.get('/post_list', async (req, res) => {
     const nombre = "PruebaName";
@@ -78,7 +55,12 @@ router.post('/post_card', async (req, res) => {
                         res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
                     }
                 }else{
-                    await createCustomFields(branch[0].board_id)
+                    const idBoard = branch[0].board_id
+                    await deleteAllLabels(idBoard);
+                    await createCustomFields(idBoard)
+                    const board = await createLabel(idBoard);
+                    await pool.query('INSERT INTO label_trello SET ?', { "lab_0_or_2": board[0].id , 
+                        "lab_2_or_5": board[1].id, "lab_5_or_more": board[2].id, "branch_id": branch[0].ram_id});
                     await pool.query('UPDATE branch SET board_custom_create = ?  WHERE ram_id = ?',
                         [1, branch[0].ram_id])
                     try {
@@ -108,32 +90,10 @@ router.get('/update_card/:id', async (req, res) => {
     if(ticket.length > 0){
         const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
         const update = await updateCustomFields(branch[0].board_id, ticket[0]);
+        await calculateLabels(ticket, branch[0].ram_id)
         res.json(update)
     }else{
         res.send("ERROR")
-    }
-});
-
-// Ruta para crear los labels
-router.get('/post_label/:idBoard', async (req, res) => {
-    const { idBoard } = req.params;  //"5f21ba1b3ebc598396b5bf29";
-    const branch = await pool.query(`SELECT ram_id FROM branch WHERE board_id = '${idBoard}'`);
-
-    try {
-        board = await createLabel(idBoard);
-         console.log(board[0].id);
-         console.log(board[1].id);
-         console.log(board[2].id);
-         await pool.query('INSERT INTO label_trello SET ?', { "lab_0_or_2": board[0].id ,
-            "lab_2_or_5": board[1].id, "lab_5_or_more": board[2].id, "branch_id": branch[0]});
-
-        res.json({
-            board
-        })
-
-    } catch(err) {
-        printError(err);
-        res.status(HttpStatus.INTERNAL_SERVER_ERROR).json({err})
     }
 });
 
@@ -235,33 +195,49 @@ async function addMember(email, cardId){
 function createCustomFields(boardId) {
     return new Promise(async (resolve,reject) => {
         try {
+            await new Promise(resolve => setTimeout(resolve, 6000));
           async function createCustomFieldsprocess(resolve){
-            const result = await TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-          "modelType": "board",
-          "name": "Fecha de creacion del ticket",
-          "type":"date"});
-          await new Promise(resolve => setTimeout(resolve, 6000));
-          const result2 = await TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-          "modelType": "board",
-          "name": "Fecha de la ultima actualizacion del ticket",
-          "type":"date"});
-          await new Promise(resolve => setTimeout(resolve, 6000));
-          const result3 = await TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-          "modelType": "board",
-          "name": "Fecha de la solicitud",
-          "type":"date"});
-          await new Promise(resolve => setTimeout(resolve, 6000));
-          const result4 = await TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-          "modelType": "board",
-          "name": "Fecha de cierre",
-          "type":"date"});
-          await new Promise(resolve => setTimeout(resolve, 6000));
-          const result5 = await TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-          "modelType": "board",
-          "name": "HH Clockify",
-          "type":"text"});
-          await new Promise(resolve => setTimeout(resolve, 6000));
-          resolve(result5.data)
+            TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
+            "modelType": "board",
+            "name": "Fecha de creacion del ticket",
+            "type":"date"}).then(async (response) => {
+                await new Promise(resolve => setTimeout(resolve, 6000));
+                TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
+                "modelType": "board",
+                "name": "Fecha de la ultima actualizacion del ticket",
+                "type":"date"}).then(async (response) => {
+                    await new Promise(resolve => setTimeout(resolve, 6000));
+                    TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
+                    "modelType": "board",
+                    "name": "Fecha de la solicitud",
+                    "type":"date"}).then(async (response) => {
+                        await new Promise(resolve => setTimeout(resolve, 6000));
+                        TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
+                        "modelType": "board",
+                        "name": "Fecha de cierre",
+                        "type":"date"}).then(async (response) => {
+                            await new Promise(resolve => setTimeout(resolve, 6000));
+                            TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
+                            "modelType": "board",
+                            "name": "HH Clockify",
+                            "type":"text"}).then(async (response) => {
+                                await new Promise(resolve => setTimeout(resolve, 6000));
+                                resolve(response.data)
+                            }).catch(e => {
+                              console.log(e);
+                            });
+                        }).catch(e => {
+                        console.log(e);
+                        });
+                    }).catch(e => {
+                        console.log(e);
+                    });
+                }).catch(e => {
+                    console.log(e);
+                });
+            }).catch(e => {
+                console.log(e);
+            });
           }
           setTimeout( function(){ createCustomFieldsprocess(resolve); }, 2000);
         } catch (error) {
@@ -290,7 +266,7 @@ function createCustomFields(boardId) {
 
 // Funcion para crear un label
 function createLabel( idBoard ) {
-
+    //Colores y Nombres
     const labelName1= "De 0 a 2 dias";
     const color1 = "green";
     const labelName2= "De 2 a 5 dias";
@@ -312,7 +288,6 @@ function createLabel( idBoard ) {
         }
     });
 }
-
 // Agregar label a un card
 function addLabelToCard( cardId, labelId ) {
 
@@ -326,7 +301,6 @@ function addLabelToCard( cardId, labelId ) {
         }
     });
 }
-
 // Remover label a un card
 function removeLabelToCard( cardId, labelId ) {
 
@@ -340,7 +314,6 @@ function removeLabelToCard( cardId, labelId ) {
         }
     });
 }
-
 
 // Obtener labels de un board
 function getLabels( boardId ) {
@@ -356,8 +329,50 @@ function getLabels( boardId ) {
     });
 
 }
+// Eliminar todos los labels de un board
+function deleteAllLabels( boardId ) {
+    return new Promise(async (resolve,reject) => {
 
+        try {
 
+            const labels = await TrelloAxios.get(`/boards/${boardId}/labels${keyAndToken}`);
+            let dat
+            labels.data.forEach(async (element) => {
+                dat = await TrelloAxios.delete(`/labels/${element.id+keyAndToken}`);
+            });
+            await new Promise(resolve => setTimeout(resolve, 6000));
+            resolve(labels.data)
+        } catch (error) {
+            reject(error)
+        }
+    });
+
+}
+//Funcion para editar los labels de un proyecto
+async function calculateLabels(tickets, branchID){
+    let d = new Date(), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
+    if (month.length < 2) {       
+        month = '0' + month;
+    }
+    if (day.length < 2) {
+        day = '0' + day;
+    }
+    const date1 = [year, month, day].join('-'), 
+        date2 = new Date(tickets[0].tic_date),
+        diff = new DateDiff(date1, date2), 
+        days = diff.days();
+    const labels = await pool.query('SELECT * FROM label_trello WHERE branch_id = "'+branchID +'"');
+    await removeLabelToCard(tickets[0].tic_card_id, labels[0].lab_0_or_2);
+    await removeLabelToCard(tickets[0].tic_card_id, labels[0].lab_2_or_5);
+    await removeLabelToCard(tickets[0].tic_card_id, labels[0].lab_5_or_more);
+    if(days<=2){
+        addLabelToCard(tickets[0].tic_card_id, labels[0].lab_0_or_2)
+    }else if( days >= 5){
+        addLabelToCard(tickets[0].tic_card_id, labels[0].lab_2_or_5)
+    }else{
+        addLabelToCard(tickets[0].tic_card_id, labels[0].lab_5_or_more)
+    }
+}
 //Funcion para imprimir errores
 function printError(e){
     if(e!=null){
