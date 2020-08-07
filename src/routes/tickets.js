@@ -150,7 +150,6 @@ router.get('/create_ticket/:id', async (req, res) => {
                 if(response.data != "ERROR"){
                     const updatecard = await Backend.get('/trello/update_card/'+id);
                     res.send("LISTO")
-                    res.send("Se creo la tarjeta en Trello exitosamente")
                 }else{
                     res.send("Faltan datos para poder actualizar el ticket o los mismos son erroneos, por favor verifique la informacion y vuelva a intentar")
                 }
