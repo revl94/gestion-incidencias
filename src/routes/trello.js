@@ -252,11 +252,11 @@ function createCustomFields(boardId) {
         if(fields[j].name == 'Fecha de creacion del ticket'){
             await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_date}})
         }else if(fields[j].name == 'Fecha de la ultima actualizacion del ticket'){
-            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_date}});
+            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_last_update_date}});
         }else if(fields[j].name == 'Fecha de la solicitud'){
-            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_date}})
+            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_sol_date}})
         }else if(fields[j].name == 'Fecha de cierre'){
-            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_date}})
+            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_closing_date}})
     }else if(fields[j].name == 'HH Clockify'){
         await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{text: ticket.tic_clockify_time}})
     }  
@@ -350,24 +350,17 @@ function deleteAllLabels( boardId ) {
 }
 //Funcion para editar los labels de un proyecto
 async function calculateLabels(tickets, branchID){
-    let d = new Date(), month = '' + (d.getMonth() + 1), day = '' + d.getDate(), year = d.getFullYear();
-    if (month.length < 2) {       
-        month = '0' + month;
-    }
-    if (day.length < 2) {
-        day = '0' + day;
-    }
-    const date1 = [year, month, day].join('-'), 
-        date2 = new Date(tickets[0].tic_date),
-        diff = new DateDiff(date1, date2), 
-        days = diff.days();
+    const date1 = new Date();
+    const date2 = new Date(tickets[0].tic_date);
+    const diff = new DateDiff(date1, date2);
+    const days = diff.days();
     const labels = await pool.query('SELECT * FROM label_trello WHERE branch_id = "'+branchID +'"');
     await removeLabelToCard(tickets[0].tic_card_id, labels[0].lab_0_or_2);
     await removeLabelToCard(tickets[0].tic_card_id, labels[0].lab_2_or_5);
     await removeLabelToCard(tickets[0].tic_card_id, labels[0].lab_5_or_more);
     if(days<=2){
         addLabelToCard(tickets[0].tic_card_id, labels[0].lab_0_or_2)
-    }else if( days >= 5){
+    }else if( days <= 5){
         addLabelToCard(tickets[0].tic_card_id, labels[0].lab_2_or_5)
     }else{
         addLabelToCard(tickets[0].tic_card_id, labels[0].lab_5_or_more)
