@@ -45,8 +45,8 @@ CREATE TABLE IF NOT EXISTS `activities` (
   `act_trello_user` varchar(50) NOT NULL,
   PRIMARY KEY (`act_id`),
   KEY `req_id_idx` (`req_id`),
-  CONSTRAINT `request_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8;
+  CONSTRAINT `request_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.activities: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `activities` DISABLE KEYS */;
@@ -67,9 +67,9 @@ CREATE TABLE IF NOT EXISTS `booking` (
   KEY `cli_id` (`cli_id`),
   KEY `usr_id` (`usr_id`),
   KEY `req_id` (`req_id`),
-  CONSTRAINT `cli_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `req_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `usr_id` FOREIGN KEY (`usr_id`) REFERENCES `user` (`usr_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `cli_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`),
+  CONSTRAINT `req_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`),
+  CONSTRAINT `usr_id` FOREIGN KEY (`usr_id`) REFERENCES `user` (`usr_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.booking: ~0 rows (aproximadamente)
@@ -91,17 +91,17 @@ CREATE TABLE IF NOT EXISTS `branch` (
 /*!40000 ALTER TABLE `branch` DISABLE KEYS */;
 REPLACE INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`, `board_custom_create`) VALUES
 	(1, 'Principal', NULL, NULL, '0'),
-	(2, 'Ramo Moda', '5f24367d933c1a54a2b6e78e', '5f24452ee2765e54b3aad27a', '0'),
-	(3, 'Beco', '5f24369a912da48cdcae46c9', '5f2445008ff1c42f92a51e0b', '0'),
-	(4, 'Abstracta', '5f2436acd53dd97eb485c2fd', '5f243f052043ff59974ca6b1', '0'),
-	(5, 'Amand', '5f2436e02a33777dddb656dd', '5f2444f8e6c9048771af9189', '0'),
-	(6, 'Ramo Inmobiliario', '5f2436f8d5b1cc2f4063cc27', '5f2444d399415a5534f90f03', '0'),
-	(7, 'Ramo Logistico', '5f243705405e220adbe09766', '5f2444a8abdafe539df04b0d', '0'),
-	(8, 'Beconsult', '5f24371e4d21a37e8cc86b98', '5f2444a2e99e7a0c2a6b2d4c', '0'),
-	(9, 'EPA', '5f2d5166c685dd19fcf2e5c5', '5f2d517631f0fc226ffadc0b', '1'),
-	(10, 'Ramo Automotriz', '5f24373aee52aa3102ab1e46', '5f2444902e44a25e241d8b31', '0'),
+	(2, 'Ramo Moda', NULL, NULL, '0'),
+	(3, 'Beco', NULL, NULL, '0'),
+	(4, 'Abstracta', NULL, NULL, '0'),
+	(5, 'Amand', NULL, NULL, '0'),
+	(6, 'Ramo Inmobiliario', NULL, NULL, '0'),
+	(7, 'Ramo Logistico', NULL, NULL, '0'),
+	(8, 'Beconsult', NULL, NULL, '0'),
+	(9, 'EPA', NULL, NULL, '0'),
+	(10, 'Ramo Automotriz', NULL, NULL, '0'),
 	(11, 'Ramo Mayoreo', '5f314b5550c4671f9feea361', '5f314b720f493c0d2f174e39', '0'),
-	(12, 'Intelix', '5f2437597b3dd65a06fc4473', '5f2444822ec6ec870decbd9a', '0');
+	(12, 'Intelix', NULL, NULL, '0');
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.client
@@ -156,14 +156,11 @@ CREATE TABLE IF NOT EXISTS `label_trello` (
   `branch_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`lab_id`),
   KEY `branch_id` (`branch_id`),
-  CONSTRAINT `branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`ram_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+  CONSTRAINT `branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`ram_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.label_trello: ~2 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.label_trello: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `label_trello` DISABLE KEYS */;
-REPLACE INTO `label_trello` (`lab_id`, `lab_0_or_2`, `lab_2_or_5`, `lab_5_or_more`, `branch_id`) VALUES
-	(4, '5f2cb13066b10d2cff1a8d10', '5f2cb1310f2cf71a0628f6ff', '5f2cb1313fadb65617b5a10d', 1),
-	(5, '5f2d522b8d7b8e156e96759b', '5f2d522b31d7aa3b7b22c153', '5f2d522bf17b3a156e77da4c', 9);
 /*!40000 ALTER TABLE `label_trello` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.request
@@ -205,13 +202,13 @@ CREATE TABLE IF NOT EXISTS `request` (
   KEY `coa_id` (`coa_id`),
   KEY `rty_id` (`rty_id`),
   KEY `tea_id` (`tea_id`),
-  CONSTRAINT `client_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `client_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.request: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
 REPLACE INTO `request` (`req_id`, `board_id`, `project_id`, `task_id`, `req_ms_project`, `cli_id`, `coa_id`, `req_title`, `req_description`, `req_responsable`, `req_order_priority`, `req_date`, `req_init_date`, `req_final_date`, `req_real_final_date`, `sta_id`, `req_advance_ptge`, `req_deviations_ptge`, `req_client_completed_deliverables`, `req_client_pending_activities`, `req_client_comments`, `req_intelix_completed_deliverables`, `req_intelix_pending_activities`, `req_intelix_comments`, `req_last_update_date`, `rty_id`, `tea_id`, `req_comitee`, `req_comitee_points_discuss`, `req_day_desv`, `req_cargar`) VALUES
-	(1, NULL, NULL, NULL, 'Gestion de solicitudes.mpp', 1, NULL, 'Modelo Existencia y Disponibilidad', 'Modelo Existencia y Disponibilidad', NULL, NULL, '2020-01-01', '2020-01-01', '2020-07-01', '2020-07-01', 'open', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'true');
+	(1, NULL, NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'Modelo Existencia y Disponibilidad', 'Modelo Existencia y Disponibilidad', NULL, NULL, '2020-01-01', '2020-01-01', '2020-07-01', '2020-07-01', 'open', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'true');
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.tickets
@@ -238,10 +235,8 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   PRIMARY KEY (`tic_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=1911030009 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.tickets: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.tickets: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
-REPLACE INTO `tickets` (`tic_id`, `tic_title`, `tic_description`, `tic_branch`, `tic_subsidiary`, `tic_deparment`, `tic_usr_ci`, `tic_category`, `tic_priority`, `tic_assigned_to`, `tic_date`, `tic_last_update_date`, `tic_sol_date`, `tic_closing_date`, `tic_clockify_time`, `tic_sla`, `tic_card_id`, `tic_card_status`) VALUES
-	(1911030007, 'Usuarios', '&lt;div dir="ltr"&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Buenos días&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;La presente es para informar que Gustavo Torres de tienda Capuy trabajo hasta el dia viernes 01 de noviembre, por lo que solicitamos cancelen su cuenta de correo. &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;A su vez solicito creación de usuario en &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Abstracta La Trinidad &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Mariana Castillo- Gerente de ventas &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Abstracta LM&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Claudia Otero - Subgerente &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept LM&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Rossana Campo - gerente de tienda&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept Casa Mall&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Liliana López - gerente de tienda&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Saludos,&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div&gt;&lt;div class="gmail_signature" dir="ltr" data-smartmail="gmail_signature"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div style="font-family: tahoma,sans-serif;"&gt;&lt;span style="color: #444444; font-size: small; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;Ana Sanz&lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Jefe de Ventas&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Abstracta - BoConcept - Capuy&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 212-526.67.72&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 414-293.88.95&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;&lt;a style="color: #1155cc;" href="http://www.beco.com.ve/" target="_blank" rel="noopener"&gt;www.becocompania.com.ve&lt;/a&gt; &lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div dir="ltr"&gt;&lt;p style="font-size: 12.8px;"&gt;&lt;img src="https://drive.google.com/a/capuy.com/uc?id=19OsxnkgmLYV3i6-2x7HzlEflTGe8hMqG&amp;export=download" alt="image" /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;', 'Principal', 'Ramo Moda', 'Abstracta', '18760371', 'Aplicaciones > Usuarios', 'Medium', 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', '2019-11-03', '2019-11-11', '2019-11-06', '2019-11-11', '00:00:00', NULL, '5f319f5430e0183868950ee8', 'false');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.user
@@ -256,18 +251,16 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`usr_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.user: ~28 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.user: ~26 rows (aproximadamente)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 REPLACE INTO `user` (`usr_id`, `usr_name`, `usr_email`, `usr_ci`, `usr_id_trello`, `usr_id_clockify`) VALUES
-	(1, 'Enmanuel Leon', 'eleon@intelix.biz', '9823764', NULL, NULL),
+	(1, 'Enmanuel Leon', 'eleon@intelix.biz', '18760371', NULL, NULL),
 	(2, 'Alejandro Sanchez', 'asanchezb@intelix.biz', '14407921', NULL, NULL),
 	(3, 'Alejandro Gonzalez', 'agonzalez@intelix.biz', NULL, NULL, NULL),
 	(4, 'Angel Narvaez', 'anarvaez@intelix.biz', NULL, NULL, NULL),
 	(5, 'Ramon Vielma', 'rvielma94@gmail.com', NULL, NULL, NULL),
 	(6, 'Juan Rodriguez', 'juanchojjrc@gmail.com', NULL, NULL, NULL),
 	(7, 'Enmanuel Leon', 'eleon@intelix.biz', NULL, NULL, NULL),
-	(8, 'José José, González Rodríguez ( INT-VE-347 )', NULL, '14406213', NULL, NULL),
-	(9, 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', NULL, '18760371', NULL, NULL),
 	(10, 'David De Freitas', 'ddefreitas@intelix.biz', '22416787', NULL, NULL),
 	(11, 'David Hernandez', 'dhernandez@intelix.biz', '19698356', NULL, NULL),
 	(12, 'Daniel Sierra', 'dsierra@intelix.biz', '9677258', NULL, NULL),
