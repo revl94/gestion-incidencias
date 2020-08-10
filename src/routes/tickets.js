@@ -269,14 +269,14 @@ function formatTime(isH, isM, isS) {
 
 // Funcion para actualizar a las 12 AM
 async function fillAllData(){
-    const tickets = await pool.query('SELECT * FROM tickets')
-    let hours;
+    const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false"')
+    let result;
     tickets.forEach( async (ticket) =>{
-        hours = await Backend.get('/tickets/get_hours/'+ticket.tic_id);
-        console.log("Tickect #"+ticket.tic_id+": hora actualizada")
-        if(hours != "ERROR" && ticket.tic_card_id != null){
-            const updatecard = await Backend.get('/trello/update_card/'+ticket.tic_id);
-            console.log("Tickect #"+ticket.tic_id+": carta actualizada")
+        result = await Backend.get('/tickets/update_ticket/'+ticket.tic_id);
+        if(result.data == "LISTO"){
+            console.log("Tickect #"+ticket.tic_id+": ticket actualizado")
+        }else{
+            console.log("Tickect #"+ticket.tic_id+": Error actualizando este ticket")
         }
     })
 }

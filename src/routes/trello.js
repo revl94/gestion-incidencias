@@ -91,12 +91,38 @@ router.get('/update_card/:id', async (req, res) => {
         const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
         const update = await updateCustomFields(branch[0].board_id, ticket[0]);
         await calculateLabels(ticket, branch[0].ram_id)
+        await updateCardStatus(ticket[0])
         res.json(update)
     }else{
         res.send("ERROR")
     }
 });
-
+//Funcion para actualizar el estatus de la tarjeta
+function updateCardStatus(ticket) {
+    const cardID = ticket.tic_card_id
+    return new Promise(async (resolve,reject) => {
+        try {
+          const result = (await TrelloAxios.get(`/cards/${cardID}/customFieldItems${keyAndToken}`)).data[0].value.checked;
+          if(result != undefined){
+            await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',
+            ["true", ticket.tic_id]);
+          }
+          resolve(result)
+        } catch (error) {
+          reject(error)
+        }
+      });
+}
+function getCustomFieldsInCard(cardID) {
+    return new Promise(async (resolve,reject) => {
+        try {
+          const result = await TrelloAxios.get(`/cards/${cardID}/customFieldItems${keyAndToken}`);
+          resolve(result.data)
+        } catch (error) {
+          reject(error)
+        }
+      });
+}
 // Funcion para crear un board
 function createBoard(name) {
     return new Promise(async (resolve, reject) => {
@@ -222,7 +248,14 @@ function createCustomFields(boardId) {
                             "name": "HH Clockify",
                             "type":"text"}).then(async (response) => {
                                 await new Promise(resolve => setTimeout(resolve, 6000));
-                                resolve(response.data)
+                                TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
+                                    "modelType": "board",
+                                    "name": "Finalizada",
+                                    "type":"checkbox"}).then(async (response) => {
+                                        resolve(response.data)
+                                    }).catch(e => {
+                                        console.log(e);
+                                    });
                             }).catch(e => {
                               console.log(e);
                             });

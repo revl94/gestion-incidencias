@@ -1,7 +1,7 @@
 -- --------------------------------------------------------
--- Host:                         localhost
--- Versión del servidor:         5.7.24 - MySQL Community Server (GPL)
--- SO del servidor:              Win64
+-- Host:                         10.48.13.154
+-- Versión del servidor:         8.0.18 - MySQL Community Server - GPL
+-- SO del servidor:              Linux
 -- HeidiSQL Versión:             10.2.0.5599
 -- --------------------------------------------------------
 
@@ -13,12 +13,10 @@
 
 
 -- Volcando estructura de base de datos para dbgestionocupacion
-DROP DATABASE IF EXISTS `dbgestionocupacion`;
-CREATE DATABASE IF NOT EXISTS `dbgestionocupacion` /*!40100 DEFAULT CHARACTER SET utf8 */;
+CREATE DATABASE IF NOT EXISTS `dbgestionocupacion` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `dbgestionocupacion`;
 
 -- Volcando estructura para tabla dbgestionocupacion.activities
-DROP TABLE IF EXISTS `activities`;
 CREATE TABLE IF NOT EXISTS `activities` (
   `act_id` int(11) NOT NULL AUTO_INCREMENT,
   `req_id` int(11) DEFAULT NULL,
@@ -45,40 +43,39 @@ CREATE TABLE IF NOT EXISTS `activities` (
   `act_trello_user` varchar(50) NOT NULL,
   PRIMARY KEY (`act_id`),
   KEY `req_id_idx` (`req_id`),
-  CONSTRAINT `request_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8;
+  CONSTRAINT `request_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=193 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.activities: ~24 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.activities: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `activities` DISABLE KEYS */;
 REPLACE INTO `activities` (`act_id`, `req_id`, `act_trello_name`, `act_description_trello`, `act_card_id`, `act_init_date`, `act_init_real_date`, `act_end_date`, `act_real_end_date`, `act_estimated_hours`, `act_desv_percentage`, `act_day_desv`, `act_id_parent`, `act_id_parent2`, `act_id_prelacion`, `act_id_project_task`, `act_id_user_trello`, `act_time_loaded`, `act_status`, `act_porcent`, `act_title`, `act_mail`, `act_trello_user`) VALUES
-	(49, 52, 'LOG-MA15-Modelo de Existencia y Disponibilidad', NULL, NULL, '2020-06-01 08:00:00', NULL, '2020-06-26 12:00:00', NULL, 240, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-	(50, 52, 'Inicio solicitud', NULL, '5f22f6f1e7af5a74227ea95d', '2020-06-01 08:00:00', NULL, '2020-06-05 17:00:00', NULL, 40, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(51, 52, 'Existencia Propia y Proveedor', NULL, NULL, '2020-06-08 08:00:00', NULL, '2020-06-12 12:00:00', NULL, 68, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-	(52, 52, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f22f6ef5bda30039244252e', '2020-06-08 08:00:00', NULL, '2020-06-10 17:00:00', NULL, 36, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-	(53, 52, 'Creación de nuevos tipos de ajuste', NULL, '5f22f6ef6051d74bb7c929c6', '2020-06-08 08:00:00', NULL, '2020-06-08 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(54, 52, 'Validación y completación para los nuevos tipos de ajuste', NULL, '5f22f6f04050262a4dd5cba3', '2020-06-09 08:00:00', '2020-07-06 16:00:00', '2020-06-10 17:00:00', '2020-07-09 16:00:00', 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2.8, 'Active', 50, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(55, 52, 'Modificación en réplica de Ajuste para llevar data a LEGACY', NULL, '5f22f6f0cdb01a26fb110de0', '2020-06-08 08:00:00', NULL, '2020-06-09 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(56, 52, 'Implementación de ventas propias y proveedor', NULL, NULL, '2020-06-09 13:00:00', NULL, '2020-06-10 17:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-	(57, 52, 'Ventas propias', NULL, '5f22f6f04c70c160272436d3', '2020-06-09 13:00:00', NULL, '2020-06-10 10:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(58, 52, 'Ventas proveedor', NULL, '5f22f6ee9a23ff513107d8f5', '2020-06-10 10:00:00', NULL, '2020-06-10 17:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(59, 52, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f22f6ef5bda30039244252e', '2020-06-11 08:00:00', NULL, '2020-06-11 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 60, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(60, 52, 'Implementación de réplica que calcule y almacene las unidades necesarias para la Existencia propia y proveedor en la nueva tabla', NULL, '5f22f6ee8d2fb88b8cae518d', '2020-06-11 08:00:00', NULL, '2020-06-12 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', '', 'Enmanuel Leon'),
-	(61, 52, 'Disponibilidad Propia', NULL, NULL, '2020-06-12 08:00:00', NULL, '2020-06-18 12:00:00', NULL, 64, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-	(62, 52, 'Implementación de Fórmula de Existencia propia', NULL, '5f22f6ef7179437de221ff82', '2020-06-12 08:00:00', NULL, '2020-06-15 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(63, 52, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f22f6f0a229662e083e8860', '2020-06-12 13:00:00', NULL, '2020-06-16 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(64, 52, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f22f6f0a229662e083e8860', '2020-06-16 08:00:00', NULL, '2020-06-17 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(65, 52, 'Implementación de Función de Disponibilidad Propia', NULL, '5f22f6ef7e47e883f55b02cf', '2020-06-16 13:00:00', NULL, '2020-06-18 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(66, 52, 'Disponibilidad Proveedor', NULL, NULL, '2020-06-18 08:00:00', NULL, '2020-06-25 12:00:00', NULL, 60, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-	(67, 52, 'Implementación de Fórmula de Existencia proveedor2', NULL, '5f22f6ef405ff271ae198724', '2020-06-18 08:00:00', NULL, '2020-06-19 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(68, 52, 'Implementación de Fórmula de Mercancia en cuarentena proveedor', NULL, '5f22f6f0afcac48a5c994d38', '2020-06-18 13:00:00', NULL, '2020-06-22 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 10, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(69, 52, 'Implementación de Fórmula de Ventas proveedor en tránsito', NULL, '5f22f6eff835956a8869eddd', '2020-06-19 13:00:00', NULL, '2020-06-23 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 50, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(70, 52, 'Implementación de Función de Disponibilidad Proveedor', NULL, '5f22f6efa748087b03432307', '2020-06-22 13:00:00', NULL, '2020-06-25 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 51, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
-	(71, 52, 'Disponibilidad Total', NULL, NULL, '2020-06-25 13:00:00', NULL, '2020-06-26 12:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
-	(72, 52, 'Implementación de Función de Disponibilidad Total', NULL, '5f22f6ef2977f88e09e242eb', '2020-06-25 13:00:00', NULL, '2020-06-26 12:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon');
+	(169, 53, 'LOG-MA15-Modelo de Existencia y Disponibilidad', NULL, NULL, '2020-06-01 08:00:00', NULL, '2020-06-26 12:00:00', NULL, 240, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(170, 53, 'Inicio solicitud', NULL, '5f3180613f82241d7d7dca8a', '2020-06-01 08:00:00', '2020-08-01 16:00:00', '2020-06-05 17:00:00', '2020-08-10 16:00:00', 40, 0, 66, NULL, NULL, NULL, NULL, NULL, 5.01667, 'Active', 67, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(171, 53, 'Existencia Propia y Proveedor', NULL, NULL, '2020-06-08 08:00:00', NULL, '2020-06-12 12:00:00', NULL, 68, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(172, 53, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f318062dbf4265db6b1eafd', '2020-06-08 08:00:00', NULL, '2020-06-10 17:00:00', NULL, 36, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(173, 53, 'Creación de nuevos tipos de ajuste', NULL, '5f3180600caf8358397b9f72', '2020-06-08 08:00:00', NULL, '2020-06-08 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(174, 53, 'Validación y completación para los nuevos tipos de ajuste', NULL, '5f3180610deb2068c292f87d', '2020-06-09 08:00:00', NULL, '2020-06-10 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(175, 53, 'Modificación en réplica de Ajuste para llevar data a LEGACY', NULL, '5f318062e414a14ee1c83b36', '2020-06-08 13:00:00', NULL, '2020-06-09 17:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(176, 53, 'Implementación de ventas propias y proveedor', NULL, NULL, '2020-06-09 08:00:00', NULL, '2020-06-10 12:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(177, 53, 'Ventas propias', NULL, '5f318060f6dfb90400fb2d8c', '2020-06-10 08:00:00', NULL, '2020-06-10 15:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(178, 53, 'Ventas proveedor', NULL, '5f3180610a9bc662238a9fb3', '2020-06-10 15:00:00', NULL, '2020-06-11 12:00:00', NULL, 6, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(179, 53, 'Implementación de Ajustes de entrada y salida proveedor', NULL, '5f318062dbf4265db6b1eafd', '2020-06-11 13:00:00', NULL, '2020-06-12 12:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(180, 53, 'Implementación de réplica que calcule y almacene las unidades necesarias para la Existencia propia y proveedor en la nueva tabla', NULL, '5f318061e722036223d60465', '2020-06-11 13:00:00', NULL, '2020-06-12 17:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(181, 53, 'Disponibilidad Propia', NULL, NULL, '2020-06-12 08:00:00', NULL, '2020-06-18 12:00:00', NULL, 64, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(182, 53, 'Implementación de Fórmula de Existencia propia', NULL, '5f318062e0586a20ec9fd2a8', '2020-06-12 13:00:00', NULL, '2020-06-16 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(183, 53, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f3180616095c42aeead70f7', '2020-06-15 08:00:00', NULL, '2020-06-16 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(184, 53, 'Implementación de Fórmula de Mercancia en cuarentena propia', NULL, '5f3180616095c42aeead70f7', '2020-06-16 13:00:00', NULL, '2020-06-18 12:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(185, 53, 'Implementación de Función de Disponibilidad Propia', NULL, '5f318061a654eb299c531926', '2020-06-17 08:00:00', NULL, '2020-06-18 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(186, 53, 'Disponibilidad Proveedor', NULL, NULL, '2020-06-18 08:00:00', NULL, '2020-06-25 12:00:00', NULL, 60, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(187, 53, 'Implementación de Fórmula de Existencia proveedor2', NULL, '5f31806048bf58853675a5b9', '2020-06-18 13:00:00', NULL, '2020-06-19 17:00:00', NULL, 12, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(188, 53, 'Implementación de Fórmula de Mercancia en cuarentena proveedor', NULL, '5f3180601c2f1603a1f99855', '2020-06-19 08:00:00', NULL, '2020-06-22 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(189, 53, 'Implementación de Fórmula de Ventas proveedor en tránsito', NULL, '5f318060b128412e16162c34', '2020-06-22 08:00:00', NULL, '2020-06-23 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(190, 53, 'Implementación de Función de Disponibilidad Proveedor', NULL, '5f3180611f4bba637ad1a30c', '2020-06-23 08:00:00', NULL, '2020-06-25 17:00:00', NULL, 16, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon'),
+	(191, 53, 'Disponibilidad Total', NULL, NULL, '2020-06-25 08:00:00', NULL, '2020-06-25 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'true', '', ''),
+	(192, 53, 'Implementación de Función de Disponibilidad Total', NULL, '5f318061ff4d252debeb4367', '2020-06-26 08:00:00', NULL, '2020-06-26 17:00:00', NULL, 8, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, 'Active', 0, 'false', 'eleon@intelix.biz', 'Enmanuel Leon');
 /*!40000 ALTER TABLE `activities` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.booking
-DROP TABLE IF EXISTS `booking`;
 CREATE TABLE IF NOT EXISTS `booking` (
   `boo_id` int(11) NOT NULL AUTO_INCREMENT,
   `cli_id` int(11) NOT NULL,
@@ -92,25 +89,16 @@ CREATE TABLE IF NOT EXISTS `booking` (
   KEY `cli_id` (`cli_id`),
   KEY `usr_id` (`usr_id`),
   KEY `req_id` (`req_id`),
-  CONSTRAINT `cli_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `req_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  CONSTRAINT `usr_id` FOREIGN KEY (`usr_id`) REFERENCES `user` (`usr_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `cli_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`),
+  CONSTRAINT `req_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`),
+  CONSTRAINT `usr_id` FOREIGN KEY (`usr_id`) REFERENCES `user` (`usr_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.booking: ~7 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.booking: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
-REPLACE INTO `booking` (`boo_id`, `cli_id`, `req_id`, `usr_id`, `boo_duration`, `boo_start_date`, `boo_end_date`, `boo_percentage`) VALUES
-	(1, 1, 47, 1, NULL, '2020-07-01', '2020-08-08', 50),
-	(3, 1, 47, 2, NULL, '2020-07-29', '2020-08-08', 50),
-	(4, 1, 45, 2, NULL, '2020-07-28', '2020-08-04', 50),
-	(5, 1, 45, 3, NULL, '2020-07-28', '2020-08-13', 80),
-	(6, 1, 51, 4, NULL, '2020-07-29', '2020-08-11', 100),
-	(7, 1, 48, 6, NULL, '2020-07-29', '2020-08-12', 20),
-	(8, 1, 48, 5, NULL, '2020-07-28', '2020-08-07', 20);
 /*!40000 ALTER TABLE `booking` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.branch
-DROP TABLE IF EXISTS `branch`;
 CREATE TABLE IF NOT EXISTS `branch` (
   `ram_id` int(11) NOT NULL AUTO_INCREMENT,
   `ram_name` varchar(45) DEFAULT NULL,
@@ -133,12 +121,11 @@ REPLACE INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`, `board_custo
 	(8, 'Beconsult', '5f24371e4d21a37e8cc86b98', '5f2444a2e99e7a0c2a6b2d4c', '0'),
 	(9, 'EPA', '5f2d5166c685dd19fcf2e5c5', '5f2d517631f0fc226ffadc0b', '1'),
 	(10, 'Ramo Automotriz', '5f24373aee52aa3102ab1e46', '5f2444902e44a25e241d8b31', '0'),
-	(11, 'Ramo Mayoreo', '5f24374b78e584792fee1a3d', '5f244488937cf95b50ca5156', '0'),
+	(11, 'Ramo Mayoreo', '5f314b5550c4671f9feea361', '5f314b720f493c0d2f174e39', '0'),
 	(12, 'Intelix', '5f2437597b3dd65a06fc4473', '5f2444822ec6ec870decbd9a', '0');
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.client
-DROP TABLE IF EXISTS `client`;
 CREATE TABLE IF NOT EXISTS `client` (
   `cli_id` int(11) NOT NULL AUTO_INCREMENT,
   `cli_name` varchar(45) NOT NULL,
@@ -152,7 +139,6 @@ REPLACE INTO `client` (`cli_id`, `cli_name`) VALUES
 /*!40000 ALTER TABLE `client` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.clockify_task
-DROP TABLE IF EXISTS `clockify_task`;
 CREATE TABLE IF NOT EXISTS `clockify_task` (
   `clo_id` int(11) NOT NULL AUTO_INCREMENT,
   `clo_task_name` varchar(45) DEFAULT NULL,
@@ -168,7 +154,6 @@ CREATE TABLE IF NOT EXISTS `clockify_task` (
 /*!40000 ALTER TABLE `clockify_task` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.database_reg
-DROP TABLE IF EXISTS `database_reg`;
 CREATE TABLE IF NOT EXISTS `database_reg` (
   `reg_id` int(11) NOT NULL AUTO_INCREMENT,
   `reg_update_time` datetime NOT NULL,
@@ -180,7 +165,6 @@ CREATE TABLE IF NOT EXISTS `database_reg` (
 /*!40000 ALTER TABLE `database_reg` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.label_trello
-DROP TABLE IF EXISTS `label_trello`;
 CREATE TABLE IF NOT EXISTS `label_trello` (
   `lab_id` int(11) NOT NULL AUTO_INCREMENT,
   `lab_0_or_2` varchar(45) DEFAULT NULL,
@@ -189,10 +173,10 @@ CREATE TABLE IF NOT EXISTS `label_trello` (
   `branch_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`lab_id`),
   KEY `branch_id` (`branch_id`),
-  CONSTRAINT `branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`ram_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
+  CONSTRAINT `branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`ram_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.label_trello: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.label_trello: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `label_trello` DISABLE KEYS */;
 REPLACE INTO `label_trello` (`lab_id`, `lab_0_or_2`, `lab_2_or_5`, `lab_5_or_more`, `branch_id`) VALUES
 	(4, '5f2cb13066b10d2cff1a8d10', '5f2cb1310f2cf71a0628f6ff', '5f2cb1313fadb65617b5a10d', 1),
@@ -200,7 +184,6 @@ REPLACE INTO `label_trello` (`lab_id`, `lab_0_or_2`, `lab_2_or_5`, `lab_5_or_mor
 /*!40000 ALTER TABLE `label_trello` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.request
-DROP TABLE IF EXISTS `request`;
 CREATE TABLE IF NOT EXISTS `request` (
   `req_id` int(11) NOT NULL AUTO_INCREMENT,
   `board_id` varchar(50) DEFAULT NULL,
@@ -238,25 +221,16 @@ CREATE TABLE IF NOT EXISTS `request` (
   KEY `coa_id` (`coa_id`),
   KEY `rty_id` (`rty_id`),
   KEY `tea_id` (`tea_id`),
-  CONSTRAINT `client_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8;
+  CONSTRAINT `client_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.request: ~9 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.request: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
 REPLACE INTO `request` (`req_id`, `board_id`, `project_id`, `task_id`, `req_ms_project`, `cli_id`, `coa_id`, `req_title`, `req_description`, `req_responsable`, `req_order_priority`, `req_date`, `req_init_date`, `req_final_date`, `req_real_final_date`, `sta_id`, `req_advance_ptge`, `req_deviations_ptge`, `req_client_completed_deliverables`, `req_client_pending_activities`, `req_client_comments`, `req_intelix_completed_deliverables`, `req_intelix_pending_activities`, `req_intelix_comments`, `req_last_update_date`, `rty_id`, `tea_id`, `req_comitee`, `req_comitee_points_discuss`, `req_day_desv`, `req_cargar`) VALUES
-	(40, '5ee2fe80dd1a4b0ca12b8514', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 13', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 67, 4, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 'false'),
-	(45, '5ecc545f367f7d139208c139', NULL, NULL, NULL, 1, NULL, 'Centro de Desarrollo - Productos Intelix Capítulo ABX', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 13, 34, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 14, 'false'),
-	(46, '5ee2f4d36ec4910464b7e906', NULL, NULL, NULL, 1, NULL, 'preuba12', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 45, 23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 3, 'false'),
-	(47, '5ed18e8039bdeb21ec923c5e', NULL, NULL, NULL, 1, NULL, 'Modificaciones de la página Web de Beconsult', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 34, 45, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 4, 'false'),
-	(48, '5edb080749b93c4eb29534ea', NULL, NULL, NULL, 1, NULL, 'Prueba', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 22, 14, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 33, 'false'),
-	(49, '5ee3b950f3ce406448212735', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 14', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 14, 23, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 45, 'false'),
-	(50, '5ef232463d057744796935ce', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'prueba 15', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 30, 54, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 23, 'false'),
-	(51, '', NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'Prueba 17', NULL, 'Joe Doe', NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 20, 76, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 56, 'false'),
-	(52, '5f22f59bf88a9a121c1cf35e', NULL, NULL, 'Gestion de solicitudes.mpp', 1, NULL, 'Gestion de solicitudes', NULL, NULL, NULL, '9999-12-31', '9999-12-31', '9999-12-31', '9999-12-31', 'open', 20, 76, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 56, 'true');
+	(53, '5f317fdd3da69773d1664e40', NULL, NULL, 'Gestion de solicitudes.mpp', 1, NULL, 'Modelo Existencia y Disponibilidad', 'Modelo Existencia y Disponibilidad', NULL, NULL, '2020-01-01', '2020-01-01', '2020-07-01', '2020-07-01', 'open', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'true');
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.tickets
-DROP TABLE IF EXISTS `tickets`;
 CREATE TABLE IF NOT EXISTS `tickets` (
   `tic_id` int(11) NOT NULL AUTO_INCREMENT,
   `tic_title` varchar(200) DEFAULT NULL,
@@ -275,18 +249,19 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `tic_clockify_time` time DEFAULT '00:00:00',
   `tic_sla` int(11) DEFAULT NULL,
   `tic_card_id` varchar(45) DEFAULT NULL,
+  `tic_card_status` varchar(15) DEFAULT 'false',
   PRIMARY KEY (`tic_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1911030009 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1911150081 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.tickets: ~1 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.tickets: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
 REPLACE INTO `tickets` (`tic_id`, `tic_title`, `tic_description`, `tic_branch`, `tic_subsidiary`, `tic_deparment`, `tic_usr_ci`, `tic_category`, `tic_priority`, `tic_assigned_to`, `tic_date`, `tic_last_update_date`, `tic_sol_date`, `tic_closing_date`, `tic_clockify_time`, `tic_sla`, `tic_card_id`) VALUES
-	(1911030006, 'Venezuela  Dif.Vtas02/10/2019-02/11/2019 - 509298', '&lt;pre&gt; FERRETERIA EPA, C.A.                 Venezuela                                               Pagina..:         1 RIF:                                                                                         Fecha...:   3/11/19 CONTROL/SVINV127                           Diferencias de Archivos de Ventas del 02/10/2019 al 02/11/2019                                                Tienda menos Central------------------------------------------------------------------------------------------------    Fecha      Tda           Ventas Netas                  Impuesto                Archivos Comparados------------------------------------------------------------------------------------------------------------------JU 24/10/2019  004                  17.025,00-                  2.724,01- TRANSA-DETALLE VS. TRCMOV-TRDMOVMA 22/10/2019  004                  29.875,00-                  4.780,00- TRANSA-DETALLE VS. TRCMOV-TRDMOVLU 21/10/2019  004                  46.900,00                   7.504,01  TRANSA-DETALLE VS. TRCMOV-TRDMOV------------------------------------------------------------------------------------------------------------------              ************************ FIN DEL REPORTE ************************&lt;/pre&gt;', 'EPA', 'EPAVE', 'OF/01', '9823764', 'Aplicaciones > Facturacion', 'High', 'Llovera Padron, Gerson Luis ( INT-VE-277 )', '2020-08-05', '2019-11-11', '2019-11-06', '2019-11-11', '00:00:00', NULL, '5f2d522c8bf3f32cf664c207'),
-	(1911030008, 'Fwd: equipos Laptops', '&lt;div dir="ltr"&gt;Buen Día Ana&lt;div&gt; &lt;/div&gt;&lt;div&gt;Merbelin y yo estaremos revisando la información y planificando los cambios necesarios.&lt;/div&gt;&lt;div&gt; &lt;/div&gt;&lt;div&gt;Cualquier duda te preguntamos&lt;/div&gt;&lt;div&gt;Saludos&lt;br /&gt;&lt;br /&gt;&lt;div class="gmail_quote"&gt;&lt;div class="gmail_attr" dir="ltr"&gt;---------- Forwarded message ---------&lt;br /&gt;De: &lt;strong class="gmail_sendername" dir="auto"&gt;Ana Sanz&lt;/strong&gt; &lt;span dir="auto"&gt;&lt;&lt;a href="mailto:asanz@capuy.com"&gt;asanz@capuy.com&lt;/a&gt;&gt;&lt;/span&gt;&lt;br /&gt;Date: sáb., 2 nov. 2019 a las 13:42&lt;br /&gt;Subject: equipos Laptops&lt;br /&gt;To: Nancy Gomez &lt;&lt;a href="mailto:ngomez@walkiria.biz"&gt;ngomez@walkiria.biz&lt;/a&gt;&gt;&lt;/div&gt;&lt;br /&gt;&lt;br /&gt;&lt;div dir="ltr"&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Hola Buenos dias &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Nancy los equipos  deben quedar así:&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Capuy/ usuarios:&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Laptop: Gabriel Hernandez (usa la que tenía en LPG)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Laptop: Asesor de ventas 1 (vacante)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- PC: Amarelis Graterol &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- PC: Reubicar para asesor 3. &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept CM / usuarios&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Liliana López (se queda con la que tenía en LM)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Reubicar las  PC hacia area de counter. (sólo hay 1) &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept LM&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Rossana Campo (usa una que estaba asignada a Capuy)&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Isael Planas&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Maria Alessandra Alcedo&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;quitar la PC de tienda y disponerla para otra locación&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept LPG&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Nancy Arellano&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Marbely Peña&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;- Reubicar la PC a área de caja. (consultar si Nancy la usa o ella usa lapto) &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;En abstracta CCCT estamos OK&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;En abstracta LM con 5 estamos OK&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;2 en oficina. 1 en nivel 1 y 2 en PB que habría que reubicar. &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;por lo que podemos disponer del resto.&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Saludos,&lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt;Ana &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div&gt;&lt;div dir="ltr" data-smartmail="gmail_signature"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div style="font-family: tahoma,sans-serif;"&gt;&lt;span style="color: #444444; font-size: small; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;Ana Sanz&lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Jefe de Ventas&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Abstracta - BoConcept - Capuy&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 212-526.67.72&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 414-293.88.95&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;&lt;a style="color: #1155cc;" href="http://www.beco.com.ve/" target="_blank" rel="noopener"&gt;www.becocompania.com.ve&lt;/a&gt; &lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div dir="ltr"&gt;&lt;p style="font-size: 12.8px;"&gt;&lt;img src="https://drive.google.com/a/capuy.com/uc?id=19OsxnkgmLYV3i6-2x7HzlEflTGe8hMqG&amp;export=download" alt="image" /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;br style="clear: both;" /&gt;&lt;div&gt; &lt;/div&gt;-- &lt;br /&gt;&lt;div class="gmail_signature" dir="ltr" data-smartmail="gmail_signature"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div style="font-size: 12.8px; font-family: tahoma,sans-serif;"&gt;&lt;span style="font-family: arial, helvetica, sans-serif;"&gt;&lt;span style="font-size: small; color: #444444;"&gt;&lt;strong&gt;Nancy Gómez&lt;/strong&gt;&lt;/span&gt;&lt;br /&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px; font-family: tahoma,sans-serif;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;Gerencia de Procesos de Sistemas&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-size: 12.8px;"&gt;&lt;span style="font-family: arial, helvetica, sans-serif;"&gt;+58 212-238.88.11 / ext. 2473&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;&lt;a style="color: #1155cc;" href="http://www.beco.com.ve/" target="_blank" rel="noopener"&gt;www.becocompania.com.ve&lt;/a&gt; &lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div style="text-align: center;"&gt; &lt;/div&gt;&lt;div style="text-align: left;"&gt;&lt;img src="https://docs.google.com/uc?export=download&amp;id=172JG_4TbPPOrPDxLywI71VwldSn1oPKF&amp;revid=0B58Ka6L7w8a8MjVlb2xRSC94UTNpaTdRSGxZK1pUNzZMeEU4PQ" alt="image" /&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;', 'Principal', 'Ramo Moda', 'Abstracta', '14406213', 'Computadores y Perifericos > Traslados/movimientos', 'Medium', 'José José, González Rodríguez ( INT-VE-347 )', '2020-08-05', '2020-02-18', '2020-02-12', '2020-02-18', '00:00:00', NULL, '5f2cb13205707b7ec6c42615');
+	(1911030006, 'Venezuela  Dif.Vtas02/10/2019-02/11/2019 - 509298', '&lt;pre&gt; FERRETERIA EPA, C.A.                 Venezuela                                               Pagina..:         1 RIF:                                                                                         Fecha...:   3/11/19 CONTROL/SVINV127                           Diferencias de Archivos de Ventas del 02/10/2019 al 02/11/2019                                                Tienda menos Central------------------------------------------------------------------------------------------------    Fecha      Tda           Ventas Netas                  Impuesto                Archivos Comparados------------------------------------------------------------------------------------------------------------------JU 24/10/2019  004                  17.025,00-                  2.724,01- TRANSA-DETALLE VS. TRCMOV-TRDMOVMA 22/10/2019  004                  29.875,00-                  4.780,00- TRANSA-DETALLE VS. TRCMOV-TRDMOVLU 21/10/2019  004                  46.900,00                   7.504,01  TRANSA-DETALLE VS. TRCMOV-TRDMOV------------------------------------------------------------------------------------------------------------------              ************************ FIN DEL REPORTE ************************&lt;/pre&gt;', 'EPA', 'EPAVE', 'OF/01', '9823764', 'Aplicaciones > Facturacion', 'High', 'Llovera Padron, Gerson Luis ( INT-VE-277 )', '2019-11-03', '2019-11-11', '2019-11-06', '2019-11-11', '00:00:00', NULL, '5f2da09277e31636cdaf34b7'),
+	(1911030007, 'Usuarios', '&lt;div dir="ltr"&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Buenos días&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;La presente es para informar que Gustavo Torres de tienda Capuy trabajo hasta el dia viernes 01 de noviembre, por lo que solicitamos cancelen su cuenta de correo. &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;A su vez solicito creación de usuario en &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Abstracta La Trinidad &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Mariana Castillo- Gerente de ventas &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Abstracta LM&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Claudia Otero - Subgerente &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept LM&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Rossana Campo - gerente de tienda&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;BoConcept Casa Mall&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Liliana López - gerente de tienda&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt;Saludos,&lt;/div&gt;&lt;div class="gmail_default" style="font-family: verdana,sans-serif; font-size: small;"&gt; &lt;/div&gt;&lt;div&gt;&lt;div class="gmail_signature" dir="ltr" data-smartmail="gmail_signature"&gt;&lt;div dir="ltr"&gt;&lt;div&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div dir="ltr"&gt;&lt;div style="font-family: tahoma,sans-serif;"&gt;&lt;span style="color: #444444; font-size: small; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;Ana Sanz&lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Jefe de Ventas&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style="font-size: small; color: #666666; font-family: arial, helvetica, sans-serif;"&gt;Abstracta - BoConcept - Capuy&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 212-526.67.72&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="font-size: 12.8px;"&gt;&lt;span style="color: #666666; font-family: arial, helvetica, sans-serif;"&gt;+58 414-293.88.95&lt;/span&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style="font-size: 12.8px;"&gt;&lt;span style="color: #999999; font-family: arial, helvetica, sans-serif;"&gt;&lt;strong&gt;&lt;a style="color: #1155cc;" href="http://www.beco.com.ve/" target="_blank" rel="noopener"&gt;www.becocompania.com.ve&lt;/a&gt; &lt;/strong&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;div dir="ltr"&gt;&lt;p style="font-size: 12.8px;"&gt;&lt;img src="https://drive.google.com/a/capuy.com/uc?id=19OsxnkgmLYV3i6-2x7HzlEflTGe8hMqG&amp;export=download" alt="image" /&gt;&lt;br /&gt;&lt;br /&gt;&lt;/p&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;&lt;/div&gt;', 'Principal', 'Ramo Moda', 'Abstracta', '18760371', 'Aplicaciones > Usuarios', 'Medium', 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', '2019-11-03', '2019-11-11', '2019-11-06', '2019-11-11', '00:00:00', NULL, '5f2da3b6ea0aae7e8a056bed'),
+	(1911150080, 'Promocion 1036423 no sincroniza', '&lt;p&gt;Buen día,&lt;/p&gt;&lt;p&gt;Favor verificar la sincronización de la promocion 1036423, al correr en la agenda la tarea SynchronizePromotionsToCentral genera error&lt;/p&gt;&lt;p&gt;&lt;img src="https://lh3.googleusercontent.com/-gpRVCdbkjB8/Xc7EoYIuzcI/AAAAAAAAAaM/qAgHLChTDv8WcwQDiIZKCAHMl9WgrYOuwCK8BGAsYHg/s0/2019-11-15.png" /&gt;&lt;/p&gt;', 'Principal', 'Ramo Moda', 'Amand', '23712880', 'Aplicaciones > Promociones', 'Medium', 'Eduardo José, Ferreira Marques ( INT-VE-351 )', '2019-11-15', '2019-11-20', '2019-11-15', '2019-11-20', '05:00:59', NULL, '5f314a01b0cabb162d340d14');
 /*!40000 ALTER TABLE `tickets` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.user
-DROP TABLE IF EXISTS `user`;
 CREATE TABLE IF NOT EXISTS `user` (
   `usr_id` int(11) NOT NULL AUTO_INCREMENT,
   `usr_name` varchar(45) DEFAULT NULL,
@@ -297,18 +272,37 @@ CREATE TABLE IF NOT EXISTS `user` (
   PRIMARY KEY (`usr_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.user: ~9 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.user: ~6 rows (aproximadamente)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
 REPLACE INTO `user` (`usr_id`, `usr_name`, `usr_email`, `usr_ci`, `usr_id_trello`, `usr_id_clockify`) VALUES
 	(1, 'Enmanuel Leon', 'eleon@intelix.biz', '9823764', NULL, NULL),
-	(2, 'Alejandro Sanchez', 'asanchezb@intelix.biz', NULL, NULL, NULL),
+	(2, 'Alejandro Sanchez', 'asanchezb@intelix.biz', '14407921', NULL, NULL),
 	(3, 'Alejandro Gonzalez', 'agonzalez@intelix.biz', NULL, NULL, NULL),
 	(4, 'Angel Narvaez', 'anarvaez@intelix.biz', NULL, NULL, NULL),
 	(5, 'Ramon Vielma', 'rvielma94@gmail.com', NULL, NULL, NULL),
 	(6, 'Juan Rodriguez', 'juanchojjrc@gmail.com', NULL, NULL, NULL),
 	(7, 'Enmanuel Leon', 'eleon@intelix.biz', NULL, NULL, NULL),
 	(8, 'José José, González Rodríguez ( INT-VE-347 )', NULL, '14406213', NULL, NULL),
-	(9, 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', NULL, '18760371', NULL, NULL);
+	(9, 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', NULL, '18760371', NULL, NULL),
+	(10, 'David De Freitas', 'ddefreitas@intelix.biz', '22416787', NULL, NULL),
+	(11, 'David Hernandez', 'dhernandez@intelix.biz', '19698356', NULL, NULL),
+	(12, 'Daniel Sierra', 'dsierra@intelix.biz', '9677258', NULL, NULL),
+	(13, 'Francisco Ruiz', 'fruiz@intelix.biz', '7090002', NULL, NULL),
+	(14, 'Franck Gutierrez', 'fgutierrez@intelix.biz', '13381535', NULL, NULL),
+	(15, 'Freddy Rodríguez', 'frodriguez@intelix.biz', '20382020', NULL, NULL),
+	(16, 'Gabriel Alvarez', 'galvarez@intelix.biz', '20513462', NULL, NULL),
+	(17, 'Humberto Paez', 'hpaez@intelix.biz', '18748033', NULL, NULL),
+	(18, 'Victor Tortolero', 'vtortolero@intelix.biz', '19856860', NULL, NULL),
+	(19, 'Johan Gonzalez', 'jgonzalez@intelix.biz', '20108631', NULL, NULL),
+	(20, 'Luis Arvelo', 'larvelo@intelix.biz', '18344592', NULL, NULL),
+	(21, 'Luisangelica Velásquez', 'lvelasquez@intelix.biz', '20292880', NULL, NULL),
+	(22, 'Mariely Fernandez', 'mfernandez@intelix.biz', '20181083', NULL, NULL),
+	(23, 'Moisés Mendoza', 'mmendoza@intelix.biz', '23426105', NULL, NULL),
+	(24, 'Oswaldo Lucena', 'olucena@intelix.biz', '20029825', NULL, NULL),
+	(25, 'Williams León', 'wleon@intelix.biz', '12145275', NULL, NULL),
+	(26, 'Willians Vasquez', 'wvasquez@intelix.biz', '18531264', NULL, NULL),
+	(27, 'Yhovanny Quintero', 'yquintero@intelix.biz', '15107515', NULL, NULL),
+	(28, 'Yaimaru Salas', 'yquintero@intelix.biz', '25107171', NULL, NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
