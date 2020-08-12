@@ -50,6 +50,7 @@ router.post('/post_card', async (req, res) => {
                         card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
                         await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
                             [card.id, tic_id]);
+                        await new Promise(resolve => setTimeout(resolve, 3000));
                         await addMember(email, card.id)
                         res.send("CREADA")
                     } catch(err) {
@@ -94,7 +95,7 @@ router.get('/update_card/:id', async (req, res) => {
         const update = await updateCustomFields(branch[0].board_id, ticket[0]);
         await calculateLabels(ticket, branch[0].ram_id)
         await new Promise(resolve => setTimeout(resolve, 3000));
-        await updateCardStatus(ticket[0])
+        await updateCardStatus(ticket[0], branch[0].board_id)
         res.json(update)
     }else{
         res.send("ERROR")
@@ -106,10 +107,10 @@ function updateCardStatus(ticket, boardID) {
     return new Promise(async (resolve,reject) => {
         try {
           const lists = (await TrelloAxios.get(`/boards/${boardID}/lists${keyAndToken}`)).data;
-          //const initList = lists.filter( (el) => el.name.equalsIgnoreCase("Por Iniciar"))[0].id
-          const endList = lists.filter( (el) => el.name.equalsIgnoreCase("Finalizadas"))[0].id
-          const valtList = lists.filter( (el) => el.name.equalsIgnoreCase("Validadas"))[0].id
-          const card = (await TrelloAxios.get(`/boards/${boardID}/cards${cardID+keyAndToken}`)).data[0];
+          //const initList = lists.filter( (el) => el.name.toUpperCase() == "Por Iniciar".toUpperCase() )[0].id
+          const endList = lists.filter( (el) => el.name.toUpperCase() == "Finalizadas".toUpperCase() )[0].id
+          const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id
+          const card = (await TrelloAxios.get(`/boards/${boardID}/cards/${cardID+keyAndToken}`)).data;
           if(card.idList == endList){
             await TrelloAxios.put(`/cards/${cardID}/${keyAndToken}&idList=${valtList}`)
             await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',

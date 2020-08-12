@@ -174,7 +174,8 @@ router.get('/update_ticket/:id', async (req, res) => {
         res.send("Ticket no inicializado. Debe inicializar el ticket para poder procesarlo")
     }else{
         const boardID = (await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"'))[0].board_id
-        const validated = getCardStatus(ticket[0], boardID)
+        const validated = await getCardStatus(ticket[0], boardID)
+        console.log("validated: "+validated)
         if(validated){
             res.send("Ticket validado, no se puede volver a procesar")
         }else{
@@ -312,10 +313,10 @@ function getCardStatus(ticket, boardID) {
     return new Promise(async (resolve,reject) => {
         try {
           const lists = (await TrelloAxios.get(`/boards/${boardID}/lists${keyAndToken}`)).data;
-          //const initList = lists.filter( (el) => el.name.equalsIgnoreCase("Por Iniciar"))[0].id
-          //const endList = lists.filter( (el) => el.name.equalsIgnoreCase("Finalizadas"))[0].id
-          const valtList = lists.filter( (el) => el.name.equalsIgnoreCase("Validadas"))[0].id
-          const card = (await TrelloAxios.get(`/boards/${boardID}/cards${cardID+keyAndToken}`)).data[0];
+          //const initList = lists.filter( (el) => el.name.toUpperCase() == "Por Iniciar".toUpperCase() )[0].id
+          //const endList = lists.filter( (el) => el.name.toUpperCase() == "Finalizadas".toUpperCase() )[0].id
+          const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id
+          const card = (await TrelloAxios.get(`/boards/${boardID}/cards/${cardID+keyAndToken}`)).data;
           if(card.idList == valtList){
             await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',
             ["true", ticket.tic_id]);
