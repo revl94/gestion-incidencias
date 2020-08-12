@@ -43,10 +43,11 @@ CREATE TABLE IF NOT EXISTS `activities` (
   `act_title` varchar(50) NOT NULL,
   `act_mail` varchar(50) DEFAULT NULL,
   `act_trello_user` varchar(50) NOT NULL,
+  `act_card_end` int(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`act_id`),
   KEY `req_id_idx` (`req_id`),
   CONSTRAINT `request_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=217 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=241 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.activities: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `activities` DISABLE KEYS */;
@@ -70,7 +71,7 @@ CREATE TABLE IF NOT EXISTS `booking` (
   CONSTRAINT `cli_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`),
   CONSTRAINT `req_id` FOREIGN KEY (`req_id`) REFERENCES `request` (`req_id`),
   CONSTRAINT `usr_id` FOREIGN KEY (`usr_id`) REFERENCES `user` (`usr_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.booking: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `booking` DISABLE KEYS */;
@@ -100,7 +101,7 @@ REPLACE INTO `branch` (`ram_id`, `ram_name`, `board_id`, `list_id`, `board_custo
 	(8, 'Beconsult', NULL, NULL, '0'),
 	(9, 'EPA', NULL, NULL, '0'),
 	(10, 'Ramo Automotriz', NULL, NULL, '0'),
-	(11, 'Ramo Mayoreo', '5f314b5550c4671f9feea361', '5f314b720f493c0d2f174e39', '0'),
+	(11, 'Ramo Mayoreo', '5f314b5550c4671f9feea361', '5f314b720f493c0d2f174e39', '1'),
 	(12, 'Intelix', NULL, NULL, '0');
 /*!40000 ALTER TABLE `branch` ENABLE KEYS */;
 
@@ -157,10 +158,13 @@ CREATE TABLE IF NOT EXISTS `label_trello` (
   PRIMARY KEY (`lab_id`),
   KEY `branch_id` (`branch_id`),
   CONSTRAINT `branch_id` FOREIGN KEY (`branch_id`) REFERENCES `branch` (`ram_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
--- Volcando datos para la tabla dbgestionocupacion.label_trello: ~0 rows (aproximadamente)
+-- Volcando datos para la tabla dbgestionocupacion.label_trello: ~2 rows (aproximadamente)
 /*!40000 ALTER TABLE `label_trello` DISABLE KEYS */;
+REPLACE INTO `label_trello` (`lab_id`, `lab_0_or_2`, `lab_2_or_5`, `lab_5_or_more`, `branch_id`) VALUES
+	(8, '5f33e4a9109cce1887b6ef4e', '5f33e4a9e228913ae08889d9', '5f33e4a97ade2a8fa98f3831', 11),
+	(9, '5f34235feaf27875ee347e3a', '5f34235f1571d3193d1bb366', '5f3423605af587432c580500', 1);
 /*!40000 ALTER TABLE `label_trello` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.request
@@ -203,12 +207,12 @@ CREATE TABLE IF NOT EXISTS `request` (
   KEY `rty_id` (`rty_id`),
   KEY `tea_id` (`tea_id`),
   CONSTRAINT `client_id` FOREIGN KEY (`cli_id`) REFERENCES `client` (`cli_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=54 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.request: ~1 rows (aproximadamente)
 /*!40000 ALTER TABLE `request` DISABLE KEYS */;
 REPLACE INTO `request` (`req_id`, `board_id`, `project_id`, `task_id`, `req_ms_project`, `cli_id`, `coa_id`, `req_title`, `req_description`, `req_responsable`, `req_order_priority`, `req_date`, `req_init_date`, `req_final_date`, `req_real_final_date`, `sta_id`, `req_advance_ptge`, `req_deviations_ptge`, `req_client_completed_deliverables`, `req_client_pending_activities`, `req_client_comments`, `req_intelix_completed_deliverables`, `req_intelix_pending_activities`, `req_intelix_comments`, `req_last_update_date`, `rty_id`, `tea_id`, `req_comitee`, `req_comitee_points_discuss`, `req_day_desv`, `req_cargar`) VALUES
-	(1, NULL, NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'Modelo Existencia y Disponibilidad', 'Modelo Existencia y Disponibilidad', NULL, NULL, '2020-01-01', '2020-01-01', '2020-07-01', '2020-07-01', 'open', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'true');
+	(1, NULL, NULL, NULL, 'LOG-MA15-Modelo de Existencia y Disponibilidad.mpp', 1, NULL, 'Modelo Existencia y Disponibilidad', 'Modelo Existencia y Disponibilidad', NULL, NULL, '2020-01-01', '2020-01-01', '2020-07-01', '2020-07-03', 'open', NULL, 29, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 2, 'true');
 /*!40000 ALTER TABLE `request` ENABLE KEYS */;
 
 -- Volcando estructura para tabla dbgestionocupacion.tickets
@@ -228,12 +232,12 @@ CREATE TABLE IF NOT EXISTS `tickets` (
   `tic_last_update_date` date DEFAULT NULL,
   `tic_sol_date` date DEFAULT NULL,
   `tic_closing_date` date DEFAULT NULL,
-  `tic_clockify_time` time DEFAULT '00:00:00',
+  `tic_clockify_time` varchar(15) DEFAULT '0',
   `tic_sla` int(11) DEFAULT NULL,
   `tic_card_id` varchar(45) DEFAULT NULL,
   `tic_card_status` varchar(15) DEFAULT 'false',
   PRIMARY KEY (`tic_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=1911030009 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=1911030008 DEFAULT CHARSET=utf8;
 
 -- Volcando datos para la tabla dbgestionocupacion.tickets: ~0 rows (aproximadamente)
 /*!40000 ALTER TABLE `tickets` DISABLE KEYS */;
