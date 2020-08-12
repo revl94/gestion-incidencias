@@ -17,10 +17,12 @@ const keyAndToken = '?key=5d94aa42b86a6f4e11d7cd857ff8699a&token=22b262d7b19e02d
 //removeLabelToCard(cardId, labelId);
 // Ruta para Crear lista sobre un board indicado
 router.get('/post_list', async (req, res) => {
-    const nombre = "PruebaName";
-    const pruebaBoard = "5f21ba1b3ebc598396b5bf29";
+    const nombre = "PruebaName2";
+    const pruebaCard = "5f2c7177092431578a66a0e6";
+    const pruebaList = "5f3426a729ec7481d6ab72e8"; // 5f3426a729ec7481d6ab72e8
+    const pruebaBoard = "5f21ba1b3ebc598396b5bf29"; // 5f3426a729ec7481d6ab72e8
     try {
-       list = await createList(pruebaBoard, nombre);
+       list = await MoveCard(pruebaCard, pruebaList);
         res.json({
             list
         })
@@ -366,6 +368,49 @@ async function calculateLabels(tickets, branchID){
         addLabelToCard(tickets[0].tic_card_id, labels[0].lab_5_or_more)
     }
 }
+
+// Obtener labels de un board
+function getCheckItems( cardId ) {
+    return new Promise(async (resolve,reject) => {
+
+        try {
+
+            const items = await TrelloAxios.get(`/cards/${cardId}/checkItemStates${keyAndToken}`);
+            resolve(items.data)
+        } catch (error) {
+            reject(error)
+        }
+    });
+
+}
+function getCheckList( cardId ) {
+    return new Promise(async (resolve,reject) => {
+
+        try {
+
+            const items = await TrelloAxios.get(`/cards/${cardId}/checklists${keyAndToken}`);
+            resolve(items.data)
+        } catch (error) {
+            reject(error)
+        }
+    });
+
+}
+
+function MoveCard( cardId, listId ) {
+    return new Promise(async (resolve,reject) => {
+
+        try {
+
+            const card = await TrelloAxios.put(`/cards/${cardId}/idList${keyAndToken}`, { "value": listId });
+            resolve(card.data)
+        } catch (error) {
+            reject(error)
+        }
+    });
+
+}
+
 //Funcion para imprimir errores
 function printError(e){
     if(e!=null){
