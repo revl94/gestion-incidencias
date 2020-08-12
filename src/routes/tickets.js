@@ -26,6 +26,14 @@ const Backend = axios.create({
         rejectUnauthorized: false
     })
 });
+const TrelloAxios = axios.create({
+    baseURL: 'https://api.trello.com/1'
+});
+TrelloAxios.defaults.headers.post['Content-Type'] = 'application/json';
+const keyAndToken = '?key=97ed379704c2ca46cc6de86a6f0fa31f&token=dab44b231906a2484ee48d2fe11704046651e0083c6e71da3727f33589abd728';
+//'?key=97ed379704c2ca46cc6de86a6f0fa31f&token=dab44b231906a2484ee48d2fe11704046651e0083c6e71da3727f33589abd728';
+//'?key=5d94aa42b86a6f4e11d7cd857ff8699a&token=22b262d7b19e02d785a2b1fa0ba982e55ab891122b07d7ff79ffda934f7a4e28';
+
 ClockifyAxios.defaults.headers.common['Content-Type'] = 'application/json';
 ClockifyAxios.defaults.headers.common['X-Api-Key'] = 'Xvy1392jqzm2LxBF';
 
@@ -117,22 +125,19 @@ router.get('/get_hours/:id', async (req, res) => {
                         min = (parseInt(timeFormatted[0])*60) + parseInt(timeFormatted[1])
                         totalmin += min
                     })
-                    totalhours = totalmin / 60
-                    const mins = (totalhours-Math.floor(totalhours))*60
-                    const secs = (mins-Math.floor(mins))*60
-                    const finaltime = Math.floor(totalhours) + ":" + Math.floor(mins) + ":" + Math.floor(secs)
+                    totalhours = Math.round((totalmin / 60)*100)/100
                     await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
-                        [finaltime , id])
-                    res.json({finaltime})
+                        [totalhours , id])
+                    res.json({finaltime: totalhours})
                 }else{
                     await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
-                        ["00:00:00" , id])
-                    res.json({finaltime: "00:00:00"})
+                        ["0" , id])
+                    res.json({finaltime: "0"})
                 }
             }else{
                 await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
-                    ["00:00:00" , id])
-                res.json({finaltime: "00:00:00"})
+                    ["0" , id])
+                res.json({finaltime: "0"})
             }
         }
     }
@@ -168,7 +173,12 @@ router.get('/update_ticket/:id', async (req, res) => {
     if(ticket.length == 0){
         res.send("Ticket no inicializado. Debe inicializar el ticket para poder procesarlo")
     }else{
-        const hours = await Backend.get('/tickets/get_hours/'+id);
+        const boardID = (await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"'))[0].board_id
+        const validated = getCardStatus(ticket[0], boardID)
+        if(validated){
+            res.send("Ticket validado, no se puede volver a procesar")
+        }else{
+            const hours = await Backend.get('/tickets/get_hours/'+id);
             if(hours != "ERROR"){
                 if(ticket[0].tic_card_id != null){
                     const updatecard = await Backend.get('/trello/update_card/'+id);
@@ -180,6 +190,7 @@ router.get('/update_ticket/:id', async (req, res) => {
             }else{
                 res.send("Error en clockify, verifique la informacion del usuario.")
             }
+        }
     }
 });
 
@@ -296,5 +307,26 @@ function printError(e){
         console.log(e)
     }
 }
-
+function getCardStatus(ticket, boardID) {
+    const cardID = ticket.tic_card_id
+    return new Promise(async (resolve,reject) => {
+        try {
+          const lists = (await TrelloAxios.get(`/boards/${boardID}/lists${keyAndToken}`)).data;
+          //const initList = lists.filter( (el) => el.name.equalsIgnoreCase("Por Iniciar"))[0].id
+          //const endList = lists.filter( (el) => el.name.equalsIgnoreCase("Finalizadas"))[0].id
+          const valtList = lists.filter( (el) => el.name.equalsIgnoreCase("Validadas"))[0].id
+          const card = (await TrelloAxios.get(`/boards/${boardID}/cards${cardID+keyAndToken}`)).data[0];
+          if(card.idList == valtList){
+            await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',
+            ["true", ticket.tic_id]);
+            resolve(true)
+          }else{
+            resolve(false)
+          }
+          resolve(result)
+        } catch (error) {
+          reject(error)
+        }
+      });
+}
 module.exports = router;

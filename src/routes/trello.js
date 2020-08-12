@@ -93,6 +93,7 @@ router.get('/update_card/:id', async (req, res) => {
         const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
         const update = await updateCustomFields(branch[0].board_id, ticket[0]);
         await calculateLabels(ticket, branch[0].ram_id)
+        await new Promise(resolve => setTimeout(resolve, 3000));
         await updateCardStatus(ticket[0])
         res.json(update)
     }else{
@@ -100,14 +101,22 @@ router.get('/update_card/:id', async (req, res) => {
     }
 });
 //Funcion para actualizar el estatus de la tarjeta
-function updateCardStatus(ticket) {
+function updateCardStatus(ticket, boardID) {
     const cardID = ticket.tic_card_id
     return new Promise(async (resolve,reject) => {
         try {
-          const result = (await TrelloAxios.get(`/cards/${cardID}/customFieldItems${keyAndToken}`)).data[0].value.checked;
-          if(result != undefined){
+          const lists = (await TrelloAxios.get(`/boards/${boardID}/lists${keyAndToken}`)).data;
+          //const initList = lists.filter( (el) => el.name.equalsIgnoreCase("Por Iniciar"))[0].id
+          const endList = lists.filter( (el) => el.name.equalsIgnoreCase("Finalizadas"))[0].id
+          const valtList = lists.filter( (el) => el.name.equalsIgnoreCase("Validadas"))[0].id
+          const card = (await TrelloAxios.get(`/boards/${boardID}/cards${cardID+keyAndToken}`)).data[0];
+          if(card.idList == endList){
+            await TrelloAxios.put(`/cards/${cardID}/${keyAndToken}&idList=${valtList}`)
             await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',
             ["true", ticket.tic_id]);
+            resolve(true)
+          }else{
+            resolve(false)
           }
           resolve(result)
         } catch (error) {
@@ -232,40 +241,16 @@ function createCustomFields(boardId) {
                 await new Promise(resolve => setTimeout(resolve, 6000));
                 TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
                 "modelType": "board",
-                "name": "Fecha de la ultima actualizacion del ticket",
+                "name": "Fecha de cierre",
                 "type":"date"}).then(async (response) => {
                     await new Promise(resolve => setTimeout(resolve, 6000));
                     TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
                     "modelType": "board",
-                    "name": "Fecha de la solicitud",
-                    "type":"date"}).then(async (response) => {
-                        await new Promise(resolve => setTimeout(resolve, 6000));
-                        TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-                        "modelType": "board",
-                        "name": "Fecha de cierre",
-                        "type":"date"}).then(async (response) => {
-                            await new Promise(resolve => setTimeout(resolve, 6000));
-                            TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-                            "modelType": "board",
-                            "name": "HH Clockify",
-                            "type":"text"}).then(async (response) => {
-                                await new Promise(resolve => setTimeout(resolve, 6000));
-                                TrelloAxios.post(`/customField${keyAndToken}`, {"idModel":boardId,
-                                    "modelType": "board",
-                                    "name": "Finalizada",
-                                    "type":"checkbox"}).then(async (response) => {
-                                        resolve(response.data)
-                                    }).catch(e => {
-                                        console.log(e);
-                                    });
-                            }).catch(e => {
-                              console.log(e);
-                            });
-                        }).catch(e => {
-                        console.log(e);
-                        });
+                    "name": "HH Clockify",
+                    "type":"text"}).then(async (response) => {
+                        resolve(response.data)
                     }).catch(e => {
-                        console.log(e);
+                      console.log(e);
                     });
                 }).catch(e => {
                     console.log(e);
@@ -286,10 +271,6 @@ function createCustomFields(boardId) {
         await new Promise(resolve => setTimeout(resolve, 6000));
         if(fields[j].name == 'Fecha de creacion del ticket'){
             await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_date}})
-        }else if(fields[j].name == 'Fecha de la ultima actualizacion del ticket'){
-            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_last_update_date}});
-        }else if(fields[j].name == 'Fecha de la solicitud'){
-            await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_sol_date}})
         }else if(fields[j].name == 'Fecha de cierre'){
             await TrelloAxios.put(`/cards/${ticket.tic_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{date: ticket.tic_closing_date}})
     }else if(fields[j].name == 'HH Clockify'){
