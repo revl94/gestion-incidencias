@@ -55,7 +55,7 @@ router.get('/get_ticket/:id', async (req, res) => {
     Si la consulta no fue exitosa retorna la cadena "ERROR"
     */
     const { id } = req.params
-    const result = await glpi.query('SELECT * FROM `glpidb`.`view_tickets_v3` WHERE `Id Ticket` = '+id)
+    const result = await glpi.query('SELECT * FROM `glpidb`.`view_tickets_v4` WHERE `Id Ticket` = '+id)
     if(result.length == 0){
         res.send("ERROR")
     }else{
@@ -175,7 +175,6 @@ router.get('/update_ticket/:id', async (req, res) => {
     }else{
         const boardID = (await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"'))[0].board_id
         const validated = await getCardStatus(ticket[0], boardID)
-        console.log("validated: "+validated)
         if(validated){
             res.send("Ticket validado, no se puede volver a procesar")
         }else{
