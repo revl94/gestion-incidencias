@@ -287,14 +287,15 @@ function formatTime(isH, isM, isS) {
 async function fillAllData(){
     const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false"')
     let result;
-    tickets.forEach( async (ticket) =>{
-        result = await Backend.get('/tickets/update_ticket/'+ticket.tic_id);
+    for(i = 0; i<tickets.length; i++){
+        result = await Backend.get('/tickets/update_ticket/'+tickets[i].tic_id);
+        await new Promise(resolve => setTimeout(resolve, 3000));
         if(result.data == "LISTO"){
-            console.log("Tickect #"+ticket.tic_id+": ticket actualizado")
+            console.log("Tickect #"+tickets[i].tic_id+": ticket actualizado")
         }else{
-            console.log("Tickect #"+ticket.tic_id+": Error actualizando este ticket")
+            console.log("Tickect #"+tickets[i].tic_id+": Error actualizando este ticket")
         }
-    })
+    }
 }
 const interval_long =  60*60*1000;//1 hora
 async function timer(interval_long){
