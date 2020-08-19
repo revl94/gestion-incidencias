@@ -41,6 +41,11 @@ const router = express.Router();
 const HttpStatus = require('http-status-codes');
 
 //Rutas
+router.get('/update_all', async (req, res) => {
+    //Ruta para el reporte de Incidencias
+    await fillAllData()
+    res.send("LISTO")
+});
 router.get('/get_tickets', async (req, res) => {
     //Ruta para el reporte de Incidencias
     const result = await pool.query('SELECT * FROM tickets');
