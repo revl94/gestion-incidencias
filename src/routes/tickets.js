@@ -96,8 +96,19 @@ router.get('/get_hours/:id', async (req, res) => {
     Trae los datos desde clockify, los almacena(actualiza datos del ticket) en local y los retorna si la consulta fue exitosa
     Si la consulta no fue exitosa retorna la cadena "ERROR"
     */
-    const { id } = req.params
+    let { id } = req.params
     const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
+    let Tcont, ticket, TitleAndDesc;
+    const containA = tic_id.includes('A');//Es de apoyo
+    const primID = tic_id;
+    if(containA){
+        id = tic_id.split('A')[0];
+        Tcont = primID.split('A')[1];
+        TitleAndDesc = ticket[0].tic_id+ "-"+ticket[0].tic_title+":APOYO"+Tcont
+    }else{
+        TitleAndDesc = ticket[0].tic_id+ "-"+ticket[0].tic_title
+    }
+    
     if(ticket.length == 0){
         res.send("ERROR")
     }else{
@@ -108,7 +119,7 @@ router.get('/get_hours/:id', async (req, res) => {
             let userId = await getUserID(user[0].usr_email);
             if(userId.length > 0){
                 userId = userId[0].id;
-                const hours = await getTimeEntries(userId, ticket[0].tic_id+ "-"+ticket[0].tic_title)
+                const hours = await getTimeEntries(userId, TitleAndDesc)
                 if(hours.length > 0){
                     let time = {}
                     let min = 0
@@ -149,16 +160,21 @@ router.get('/get_hours/:id', async (req, res) => {
 });
 
 router.get('/create_ticket/:id', async (req, res) => {
-    const { id } = req.params
+    let { id } = req.params
+    const containA = id.includes('A');//Es de apoyo
+    const primID = id;
+    if(containA){
+        id = id.split('A')[0]
+    }
     const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
     if(ticket.length == 0){
         res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
     }else{
         if(ticket[0].tic_card_id == null){
             Backend.post('/trello/post_card',{
-                "tic_id": id}).then(async (response) => {
+                "tic_id": primID}).then(async (response) => {
                 if(response.data != "ERROR"){
-                    const updatecard = await Backend.get('/trello/update_card/'+id);
+                    const updatecard = await Backend.get('/trello/update_card/'+primID);
                     res.send("LISTO")
                 }else{
                     res.send("Faltan datos para poder actualizar el ticket o los mismos son erroneos, por favor verifique la informacion y vuelva a intentar")
@@ -173,7 +189,7 @@ router.get('/create_ticket/:id', async (req, res) => {
     }
 });
 router.get('/update_ticket/:id', async (req, res) => {
-    const { id } = req.params
+    const { id } = req.params;
     const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id +' AND `tic_card_id` IS NOT  NULL')
     if(ticket.length == 0){
         res.send("Ticket no inicializado. Debe inicializar el ticket para poder procesarlo")

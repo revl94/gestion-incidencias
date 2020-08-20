@@ -36,20 +36,42 @@ router.get('/post_list', async (req, res) => {
 
 // Ruta para crear un card en una lista especifica
 router.post('/post_card', async (req, res) => {
-    const {tic_id} = req.body;
-    const ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = '+ tic_id)
+    let {tic_id} = req.body;
+    let Tcont,Tci, ticket, TitleAndDesc;
+    const containA = tic_id.includes('A');//Es de apoyo
+    const primID = tic_id;
+    if(containA){
+        tic_id = tic_id.split('A')[0];
+        Tci = primID.split('A')[1];
+        ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = '+ tic_id)
+        Tcont = ticket.length;
+        TitleAndDesc = ticket[0].tic_id+ "-"+ticket[0].tic_title+":APOYO"+Tcont
+    }else{
+        ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = '+ tic_id)
+        TitleAndDesc = ticket[0].tic_id+ "-"+ticket[0].tic_title
+        Tci = ticket[0].tic_usr_ci
+    }
+    
     if(ticket.length > 0){
         //const email = 'eleon@intelix.biz'
-        let email = (await pool.query('SELECT * FROM user WHERE `usr_ci` = '+ticket[0].tic_usr_ci))
-        if(email.length!=0){
-            email = email[0].usr_email
+        const user = (await pool.query('SELECT * FROM user WHERE `usr_ci` = ' + Tci))
+        if(user.length!=0){
+            const email = user[0].usr_email
             if(ticket[0].tic_card_id == null){
                 const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
                 if(branch[0].board_custom_create == 1){
                     try {
-                        card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
-                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
-                            [card.id, tic_id]);
+                        card = await createCard(branch[0].list_id, TitleAndDesc, TitleAndDesc);
+                        if(containA){
+                            await pool.query('INSERT INTO tickets SET ?', 
+                            { "tic_id": primID, "tic_title": ticket[0].tic_title, "tic_description": ticket[0].tic_description,
+                                "tic_branch": ticket[0].tic_branch, "tic_subsidiary": ticket[0].tic_subsidiary, "tic_deparment": ticket[0].tic_deparment,
+                                "tic_usr_ci": Tci, "tic_category": ticket[0].tic_category, "tic_priority": ticket[0].tic_priority,
+                                "tic_assigned_to": Tci, "tic_date": ticket[0].tic_date, "tic_last_update_date": ticket[0].tic_last_update_date,
+                                "tic_closing_date": ticket[0].tic_closing_date, "tic_sol_date": ticket[0].tic_sol_date })
+
+                        }
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?', [card.id, primID]);
                         await new Promise(resolve => setTimeout(resolve, 3000));
                         await addMember(email, card.id)
                         res.send("CREADA")
@@ -69,9 +91,17 @@ router.post('/post_card', async (req, res) => {
                     await pool.query('UPDATE branch SET board_custom_create = ?  WHERE ram_id = ?',
                         [1, branch[0].ram_id])
                     try {
-                        card = await createCard(branch[0].list_id, ticket[0].tic_id+ "-"+ticket[0].tic_title, ticket[0].tic_id+ "-"+ticket[0].tic_title);
-                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?',
-                            [card.id, tic_id])
+                        card = await createCard(branch[0].list_id, TitleAndDesc, TitleAndDesc);
+                        if(containA){
+                            await pool.query('INSERT INTO tickets SET ?', 
+                            { "tic_id": primID, "tic_title": ticket[0].tic_title, "tic_description": ticket[0].tic_description,
+                                "tic_branch": ticket[0].tic_branch, "tic_subsidiary": ticket[0].tic_subsidiary, "tic_deparment": ticket[0].tic_deparment,
+                                "tic_usr_ci": Tci, "tic_category": ticket[0].tic_category, "tic_priority": ticket[0].tic_priority,
+                                "tic_assigned_to": Tci, "tic_date": ticket[0].tic_date, "tic_last_update_date": ticket[0].tic_last_update_date,
+                                "tic_closing_date": ticket[0].tic_closing_date, "tic_sol_date": ticket[0].tic_sol_date })
+
+                        }
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?', [card.id, primID]);
                         await new Promise(resolve => setTimeout(resolve, 3000));
                         await addMember(email, card.id)
                         res.send("CREADA")
