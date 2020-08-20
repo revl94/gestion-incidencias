@@ -98,7 +98,7 @@ router.get('/get_hours/:id', async (req, res) => {
     */
     let { id } = req.params
     const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
-    let Tcont, ticket, TitleAndDesc;
+    let Tcont, TitleAndDesc;
     const containA = tic_id.includes('A');//Es de apoyo
     const primID = tic_id;
     if(containA){
