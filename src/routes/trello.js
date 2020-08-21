@@ -51,27 +51,26 @@ router.post('/post_card', async (req, res) => {
         TitleAndDesc = ticket[0].tic_id+ "-"+ticket[0].tic_title
         Tci = ticket[0].tic_usr_ci
     }
-    
     if(ticket.length > 0){
         //const email = 'eleon@intelix.biz'
         const user = (await pool.query('SELECT * FROM user WHERE `usr_ci` = ' + Tci))
         if(user.length!=0){
             const email = user[0].usr_email
-            if(ticket[0].tic_card_id == null){
+            if(ticket[0].tic_card_id == null || containA){
                 const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
                 if(branch[0].board_custom_create == 1){
                     try {
                         card = await createCard(branch[0].list_id, TitleAndDesc, TitleAndDesc);
                         if(containA){
                             await pool.query('INSERT INTO tickets SET ?', 
-                            { "tic_id": primID, "tic_title": ticket[0].tic_title, "tic_description": ticket[0].tic_description,
+                            { "tic_id": tic_id+"A"+Tcont, "tic_title": ticket[0].tic_title, "tic_description": ticket[0].tic_description,
                                 "tic_branch": ticket[0].tic_branch, "tic_subsidiary": ticket[0].tic_subsidiary, "tic_deparment": ticket[0].tic_deparment,
                                 "tic_usr_ci": Tci, "tic_category": ticket[0].tic_category, "tic_priority": ticket[0].tic_priority,
                                 "tic_assigned_to": Tci, "tic_date": ticket[0].tic_date, "tic_last_update_date": ticket[0].tic_last_update_date,
                                 "tic_closing_date": ticket[0].tic_closing_date, "tic_sol_date": ticket[0].tic_sol_date })
 
                         }
-                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?', [card.id, primID]);
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?', [card.id, (containA ? tic_id+"A"+Tcont : primID)]);
                         await new Promise(resolve => setTimeout(resolve, 3000));
                         await addMember(email, card.id)
                         res.send("CREADA")
@@ -94,14 +93,14 @@ router.post('/post_card', async (req, res) => {
                         card = await createCard(branch[0].list_id, TitleAndDesc, TitleAndDesc);
                         if(containA){
                             await pool.query('INSERT INTO tickets SET ?', 
-                            { "tic_id": primID, "tic_title": ticket[0].tic_title, "tic_description": ticket[0].tic_description,
+                            { "tic_id": tic_id+"A"+Tcont, "tic_title": ticket[0].tic_title, "tic_description": ticket[0].tic_description,
                                 "tic_branch": ticket[0].tic_branch, "tic_subsidiary": ticket[0].tic_subsidiary, "tic_deparment": ticket[0].tic_deparment,
                                 "tic_usr_ci": Tci, "tic_category": ticket[0].tic_category, "tic_priority": ticket[0].tic_priority,
                                 "tic_assigned_to": Tci, "tic_date": ticket[0].tic_date, "tic_last_update_date": ticket[0].tic_last_update_date,
                                 "tic_closing_date": ticket[0].tic_closing_date, "tic_sol_date": ticket[0].tic_sol_date })
 
                         }
-                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?', [card.id, primID]);
+                        await pool.query('UPDATE tickets SET tic_card_id = ?  WHERE tic_id = ?', [card.id, (containA ? tic_id+"A"+Tcont : primID)]);
                         await new Promise(resolve => setTimeout(resolve, 3000));
                         await addMember(email, card.id)
                         res.send("CREADA")
@@ -123,7 +122,7 @@ router.post('/post_card', async (req, res) => {
 
 router.get('/update_card/:id', async (req, res) => {
     const { id } = req.params;
-    const ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = ' + id + ' AND tic_card_id IS NOT NULL')
+    const ticket = await pool.query('SELECT * FROM tickets WHERE tic_id = "' + id + '" AND tic_card_id IS NOT NULL')
     if(ticket.length > 0){
         const branch = await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"')
         const update = await updateCustomFields(branch[0].board_id, ticket[0]);

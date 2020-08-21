@@ -21,7 +21,7 @@ const ClockifyAxios = axios.create({
     baseURL: 'https://api.clockify.me/api/v1'
 });
 const Backend = axios.create({
-    baseURL: 'http://10.48.13.156:4050',
+    baseURL: 'http://localhost:4050',
     httpsAgent: new https.Agent({
         rejectUnauthorized: false
     })
@@ -97,14 +97,14 @@ router.get('/get_hours/:id', async (req, res) => {
     Si la consulta no fue exitosa retorna la cadena "ERROR"
     */
     let { id } = req.params
-    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
+    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = "'+id+'"')
     let Tcont, TitleAndDesc;
-    const containA = tic_id.includes('A');//Es de apoyo
-    const primID = tic_id;
+    const containA = id.includes('A');//Es de apoyo
+    const primID = id;
     if(containA){
-        id = tic_id.split('A')[0];
+        id = id.split('A')[0];
         Tcont = primID.split('A')[1];
-        TitleAndDesc = ticket[0].tic_id+ "-"+ticket[0].tic_title+":APOYO"+Tcont
+        TitleAndDesc = id+ "-"+ticket[0].tic_title+":APOYO"+Tcont
     }else{
         TitleAndDesc = ticket[0].tic_id+ "-"+ticket[0].tic_title
     }
@@ -143,16 +143,16 @@ router.get('/get_hours/:id', async (req, res) => {
                     })
                     totalhours = Math.round((totalmin / 60)*100)/100
                     await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
-                        [totalhours , id])
+                        [totalhours , primID])
                     res.json({finaltime: totalhours})
                 }else{
                     await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
-                        ["0" , id])
+                        ["0" , primID])
                     res.json({finaltime: "0"})
                 }
             }else{
                 await pool.query('UPDATE tickets SET tic_clockify_time = ?  WHERE tic_id = ?',
-                    ["0" , id])
+                    ["0" , primID])
                 res.json({finaltime: "0"})
             }
         }
@@ -163,18 +163,21 @@ router.get('/create_ticket/:id', async (req, res) => {
     let { id } = req.params
     const containA = id.includes('A');//Es de apoyo
     const primID = id;
+    let tickets;
     if(containA){
         id = id.split('A')[0]
+        tickets = await pool.query('SELECT * FROM tickets WHERE `tic_id` LIKE "' + id + '%"')
     }
-    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id)
+    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = "' + id + '"')
+    
     if(ticket.length == 0){
         res.send("Ticket no inicializado. Debe inicializar le ticket para poder procesarlo")
     }else{
-        if(ticket[0].tic_card_id == null){
+        if(ticket[0].tic_card_id == null || containA){
             Backend.post('/trello/post_card',{
                 "tic_id": primID}).then(async (response) => {
                 if(response.data != "ERROR"){
-                    const updatecard = await Backend.get('/trello/update_card/'+primID);
+                    const updatecard = await Backend.get('/trello/update_card/'+(containA ?  id+"A"+tickets.length : primID));
                     res.send("LISTO")
                 }else{
                     res.send("Faltan datos para poder actualizar el ticket o los mismos son erroneos, por favor verifique la informacion y vuelva a intentar")
@@ -190,7 +193,7 @@ router.get('/create_ticket/:id', async (req, res) => {
 });
 router.get('/update_ticket/:id', async (req, res) => {
     const { id } = req.params;
-    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = '+id +' AND `tic_card_id` IS NOT  NULL')
+    const ticket = await pool.query('SELECT * FROM tickets WHERE `tic_id` = "'+id +'" AND `tic_card_id` IS NOT NULL')
     if(ticket.length == 0){
         res.send("Ticket no inicializado. Debe inicializar el ticket para poder procesarlo")
     }else{
