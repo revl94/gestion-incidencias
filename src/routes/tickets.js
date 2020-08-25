@@ -44,7 +44,7 @@ const { stat } = require('fs');
 //ruta para devolver cartas no registradas
 
 router.get('/get_not_reg', async (req, res) => {
-    const result = await pool.query("SELECT * FROM no_register_mayoreo;")
+    const result = await pool.query("SELECT *, (SELECT usr_name FROM user WHERE usr_email = x.nre_card_member_email LIMIT 1) AS name FROM no_register_mayoreo AS x;")
     res.json({cards: result})
 });
 //ruta para actualizar cartas no registradas
@@ -383,8 +383,8 @@ async function getNotRegCards(){
                 status = 1;
             }
             await new Promise(resolve => setTimeout(resolve, 1000));
-            email = (await TrelloAxios.get(`/cards/${cards[i].id}/members${keyAndToken}`)).data[0].username;
-            email = (await TrelloAxios.get(`/members/${email}${keyAndToken}`)).data.email;
+            email = (await TrelloAxios.get(`/cards/${cards[i].id}/members${keyAndToken}`)).data[0].id;
+            email = await trelloGetEmail(email);
             exist = (await pool.query("SELECT if(COUNT(*)>0,'true','false') AS my_bool FROM no_register_mayoreo WHERE nre_card_id = '"+cards[i].id+"';"))[0].my_bool
             if(exist == 'true'){
                 nre = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_id = '"+cards[i].id+"';")
@@ -395,6 +395,19 @@ async function getNotRegCards(){
         }
     }
     return "LISTO";
+}
+async function trelloGetEmail(userID){
+    const users = await pool.query('SELECT * FROM user');
+    let userID2, email = "";
+    for(i = 0; i < users.length; i++){
+        await new Promise(resolve => setTimeout(resolve, 3000));
+        userID2 = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data.id;
+        if(userID == userID2){
+            email = users[i].usr_email;
+            break;
+        }
+    }
+    return email;
 }
 async function updateHoursNotReg(){
     const nr = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_status != 2;")
@@ -429,7 +442,6 @@ async function updateHoursNotReg(){
                     totalhours = Math.round((totalmin / 60)*100)/100
                     await pool.query('UPDATE no_register_mayoreo SET nre_clockify_time = ?  WHERE nre_id = ?',
                         [totalhours , nr[i].nre_id])
-                    res.json({finaltime: totalhours})
                 }else{
                     await pool.query('UPDATE no_register_mayoreo SET nre_clockify_time = ?  WHERE nre_id = ?',
                         ["0" , nr[i].nre_id])
