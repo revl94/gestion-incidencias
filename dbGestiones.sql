@@ -311,6 +311,22 @@ REPLACE INTO `user` (`usr_id`, `usr_name`, `usr_email`, `usr_ci`, `usr_id_trello
 	(9, 'Torres Galarraga, Pedro Elías ( INT-VE-53 )', NULL, '18760371', NULL, NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 
+-- -----------------------------------------------------
+-- Table `dbgestionocupacion`.`no_register_mayoreo`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `dbgestionocupacion`.`no_register_mayoreo` ;
+
+CREATE TABLE IF NOT EXISTS `dbgestionocupacion`.`no_register_mayoreo` (
+  `nre_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nre_title` VARCHAR(200) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `nre_decription` VARCHAR(1024) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `nre_date` DATE NULL DEFAULT NULL,
+  `nre_applicant` VARCHAR(45) CHARACTER SET 'utf8' COLLATE 'utf8_general_ci' NULL DEFAULT NULL,
+  `nre_clockify_time` TIME NULL,
+  PRIMARY KEY (`nre_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
