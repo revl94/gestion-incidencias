@@ -339,7 +339,24 @@ REPLACE INTO `user` (`usr_id`, `usr_name`, `usr_email`, `usr_ci`, `usr_id_trello
 	(27, 'Yhovanny Quintero', 'yquintero@intelix.biz', '15107515', NULL, NULL),
 	(28, 'Yaimaru Salas', 'yquintero@intelix.biz', '25107171', NULL, NULL);
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
+-- -----------------------------------------------------
+-- Table `dbgestionocupacion`.`no_register_mayoreo`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `no_register_mayoreo` ;
 
+CREATE TABLE IF NOT EXISTS `no_register_mayoreo` (
+  `nre_id` INT(11) NOT NULL AUTO_INCREMENT,
+  `nre_title` VARCHAR(200) DEFAULT NULL,
+  `nre_decription` VARCHAR(1024) DEFAULT NULL,
+  `nre_date` DATE DEFAULT NULL,
+  `nre_applicant` VARCHAR(45) DEFAULT NULL,
+  `nre_clockify_time` varchar(15) DEFAULT NULL,
+  `nre_card_id` varchar(50) DEFAULT NULL,
+  `nre_card_member_email` varchar(50) DEFAULT NULL,
+  `nre_card_status` int(1) DEFAULT 0,
+  PRIMARY KEY (`nre_id`))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -18,9 +18,12 @@ pool.getConnection((err, connection) => {
             console.error('DATABASE CONNECTION WAS REFUSED');
         }
     }
-
     if(connection) connection.release();
-    console.log('DB is connected');
+    if (connection !== undefined) {
+        console.log('DB is connected');
+    } else {
+        console.log("DB error")
+    }
     return;
 });
 

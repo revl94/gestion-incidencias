@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const mysql = require('mysql');
 const { promisify } = require('util');
@@ -21,7 +22,7 @@ const ClockifyAxios = axios.create({
     baseURL: 'https://api.clockify.me/api/v1'
 });
 const Backend = axios.create({
-    baseURL: 'http://10.48.13.156:4050',
+    baseURL: process.env.baseURL,
     httpsAgent: new https.Agent({
         rejectUnauthorized: false
     })
@@ -30,17 +31,25 @@ const TrelloAxios = axios.create({
     baseURL: 'https://api.trello.com/1'
 });
 TrelloAxios.defaults.headers.post['Content-Type'] = 'application/json';
-const keyAndToken = '?key=97ed379704c2ca46cc6de86a6f0fa31f&token=dab44b231906a2484ee48d2fe11704046651e0083c6e71da3727f33589abd728';
-//'?key=97ed379704c2ca46cc6de86a6f0fa31f&token=dab44b231906a2484ee48d2fe11704046651e0083c6e71da3727f33589abd728';
-//'?key=5d94aa42b86a6f4e11d7cd857ff8699a&token=22b262d7b19e02d785a2b1fa0ba982e55ab891122b07d7ff79ffda934f7a4e28';
+const keyAndToken = process.env.keyAndToken;
 
 ClockifyAxios.defaults.headers.common['Content-Type'] = 'application/json';
 ClockifyAxios.defaults.headers.common['X-Api-Key'] = 'Xvy1392jqzm2LxBF';
 
 const router = express.Router();
 const HttpStatus = require('http-status-codes');
+const { stat } = require('fs');
 
 //Rutas
+//ruta de cartas no registradas
+
+router.get('/update_not_reg', async (req, res) => {
+    await getNotRegCards();
+    await updateHoursNotReg();
+    await syncCustomFieldsInNotReg();
+    res.send("LISTO")
+});
+
 router.get('/update_all', async (req, res) => {
     //Ruta para el reporte de Incidencias
     await fillAllData()
@@ -353,5 +362,117 @@ function getCardStatus(ticket, boardID) {
           reject(error)
         }
       });
+}
+async function getNotRegCards(){
+    const lists = (await TrelloAxios.get(`/boards/${process.env.notRegID}/lists${keyAndToken}`)).data;
+    const endList = lists.filter( (el) => el.name.toUpperCase() == "Finalizadas".toUpperCase() )[0].id;
+    const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id;
+    const cards = (await TrelloAxios.get(`/boards/${process.env.notRegID}/cards${keyAndToken}`)).data.filter( (el) => el.idList != valtList );
+    if(cards.length >=1){
+        let exist, nre, email, status
+        for(i = 0; i < cards.length; i++){
+            status = 0;
+            if(cards[i].idList == endList){
+                await TrelloAxios.put(`/cards/${cards[i].id}/${keyAndToken}&idList=${valtList}`)
+                status = 1;
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            email = (await TrelloAxios.get(`/cards/${cards[i].id}/members${keyAndToken}`)).data[0].username;
+            email = (await TrelloAxios.get(`/members/${email}${keyAndToken}`)).data.email;
+            exist = (await pool.query("SELECT if(COUNT(*)>0,'true','false') AS my_bool FROM no_register_mayoreo WHERE nre_card_id = '"+cards[i].id+"';"))[0].my_bool
+            if(exist == 'true'){
+                nre = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_id = '"+cards[i].id+"';")
+                await pool.query('UPDATE no_register_mayoreo SET nre_title = ?, nre_decription = ?, nre_card_id = ?, nre_card_member_email = ?, nre_card_status = ? WHERE nre_id = ?', [ cards[i].name, (cards[i].desc == undefined ? "" : cards[i].desc), cards[i].id, email, status,nre[0].nre_id ]);
+            }else{
+                await pool.query('INSERT INTO no_register_mayoreo SET ?', {"nre_title": cards[i].name, "nre_decription": (cards[i].desc == undefined ? "" : cards[i].desc),  "nre_card_id": cards[i].id, "nre_card_member_email": email, "nre_card_status": status})
+            }
+        }
+    }
+    return "LISTO";
+}
+async function updateHoursNotReg(){
+    const nr = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_status != 2;")
+    if(nr.length >= 1){
+        for(i = 0; i < nr.length; i++ ){
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            userId = await getUserID(nr[i].nre_card_member_email);
+            if(userId.length > 0){
+                userId = userId[0].id;
+                hours = await getTimeEntries(userId, nr[i].nre_title)
+                if(hours.length > 0){
+                    time = {}
+                    min = 0
+                    totalmin = 0
+                    totalhours = 0
+                    hours.forEach(async (dat, i) => {
+                        oldFormat = hours[i].timeInterval.duration
+                        newFormat = oldFormat.split('PT')
+                        isH = checkH(newFormat[1])
+                        isM = checkM(newFormat[1])
+                        isS = checkS(newFormat[1])
+                        timeFormatted = formatTime(isH, isM, isS)
+                        time[i] = {
+                            "description": hours[i].description,
+                            "hours": timeFormatted[0],
+                            "minutes": timeFormatted[1],
+                            "seconds": timeFormatted[2]
+                        }
+                        min = (parseInt(timeFormatted[0])*60) + parseInt(timeFormatted[1])
+                        totalmin += min
+                    })
+                    totalhours = Math.round((totalmin / 60)*100)/100
+                    await pool.query('UPDATE no_register_mayoreo SET nre_clockify_time = ?  WHERE nre_id = ?',
+                        [totalhours , nr[i].nre_id])
+                    res.json({finaltime: totalhours})
+                }else{
+                    await pool.query('UPDATE no_register_mayoreo SET nre_clockify_time = ?  WHERE nre_id = ?',
+                        ["0" , nr[i].nre_id])
+                }
+            }else{
+                await pool.query('UPDATE no_register_mayoreo SET nre_clockify_time = ?  WHERE nre_id = ?',
+                    ["0" , nr[i].nre_id])
+            }
+        }
+    }
+    return "LISTO";
+}
+async function syncCustomFieldsInNotReg(){
+    const nr = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_status != 2;")
+    if(nr.length >= 1){
+        for(i = 0; i < nr.length; i++ ){
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            CF = await getCustomFieldsInCard(nr[i].nre_card_id);
+            for(j = 0; j < CF.length; j++ ){
+                if(CF[j].value.date != undefined){
+                    await pool.query('UPDATE no_register_mayoreo SET nre_date = ? WHERE nre_id = ?', [new Date(CF[j].value.date).toISOString().slice(0, 19).replace('T', ' ') , nr[i].nre_id ]);
+                }else if(CF[j].value.text != undefined){
+                   await pool.query('UPDATE no_register_mayoreo SET nre_applicant = ? WHERE nre_id = ?', [ CF[j].value.text , nr[i].nre_id ]);
+                }
+            }
+            await new Promise(resolve => setTimeout(resolve, 1000));
+            await updateCustomFieldsNotReg(process.env.notRegID, nr[i] );
+        }
+    }
+    await pool.query("UPDATE no_register_mayoreo SET nre_card_status = 2 WHERE nre_card_status = 1")
+    return "LISTO";
+}
+function getCustomFieldsInCard(cardID) {
+    return new Promise(async (resolve,reject) => {
+        try {
+          const result = await TrelloAxios.get(`/cards/${cardID}/customFieldItems${keyAndToken}`);
+          resolve(result.data)
+        } catch (error) {
+          reject(error)
+        }
+      });
+}
+async function updateCustomFieldsNotReg(idBoard, nr ) {
+    const fields = ( await TrelloAxios.get(`/boards/${idBoard}/customFields${keyAndToken}`) ).data
+    for (let j = 0; j < fields.length; j++) {
+        if(fields[j].name == 'HH Clockify'){
+            await TrelloAxios.put(`/cards/${nr.nre_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{number: nr.nre_clockify_time}})
+        }  
+    }
+  return "ACTUALIZADO";
 }
 module.exports = router;

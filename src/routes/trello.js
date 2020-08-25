@@ -1,3 +1,4 @@
+require('dotenv')
 const express = require('express');
 const DateDiff = require('date-diff');
 //Project's own requires
@@ -11,12 +12,9 @@ const TrelloAxios = axios.create({
     baseURL: 'https://api.trello.com/1'
 });
 TrelloAxios.defaults.headers.post['Content-Type'] = 'application/json';
-const keyAndToken = '?key=97ed379704c2ca46cc6de86a6f0fa31f&token=dab44b231906a2484ee48d2fe11704046651e0083c6e71da3727f33589abd728';
-//'?key=97ed379704c2ca46cc6de86a6f0fa31f&token=dab44b231906a2484ee48d2fe11704046651e0083c6e71da3727f33589abd728';
-//'?key=5d94aa42b86a6f4e11d7cd857ff8699a&token=22b262d7b19e02d785a2b1fa0ba982e55ab891122b07d7ff79ffda934f7a4e28';
+const keyAndToken = process.env.keyAndToken;
 
 //Rutas
-//removeLabelToCard(cardId, labelId);
 // Ruta para Crear lista sobre un board indicado
 router.get('/post_list', async (req, res) => {
     const nombre = "PruebaName";
