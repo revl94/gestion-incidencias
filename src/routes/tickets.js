@@ -41,7 +41,13 @@ const HttpStatus = require('http-status-codes');
 const { stat } = require('fs');
 
 //Rutas
-//ruta de cartas no registradas
+//ruta para devolver cartas no registradas
+
+router.get('/get_not_reg', async (req, res) => {
+    const result = await pool.query("SELECT * FROM no_register_mayoreo;")
+    res.json({cards: result})
+});
+//ruta para actualizar cartas no registradas
 
 router.get('/update_not_reg', async (req, res) => {
     await getNotRegCards();
