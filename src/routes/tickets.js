@@ -59,12 +59,18 @@ router.get('/update_not_reg', async (req, res) => {
 router.get('/update_all', async (req, res) => {
     //Ruta para el reporte de Incidencias
     await fillAllData()
+    await syncViews();
     res.send("LISTO")
 });
 router.get('/get_tickets', async (req, res) => {
     //Ruta para el reporte de Incidencias
     const result = await pool.query('SELECT * FROM tickets');
     res.json({tickets: result})
+});
+router.get('/sync_views', async (req, res) => {
+    //Ruta para sincronizar las fechas con la vista 3
+    const cont = await syncViews();
+    res.send("UPDATED: " + cont + " ROWS")
 });
 router.get('/get_ticket/:id', async (req, res) => {
     /*
@@ -334,7 +340,7 @@ async function fillAllData(){
 const interval_long =  60*60*1000;//1 hora
 async function timer(interval_long){
     const date = (new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}))).getHours(); // Create a Date object to find out what time it is
-    if(date < 13 || date < 19 ){ // Check the time at 12:00PM - 01:00PM OR 06:00PM - 07:00PM
+    if((date < 13 && date > 12) || (date < 19 && date > 18) ){ // Check the time at 12:00PM - 01:00PM OR 06:00PM - 07:00PM
         await fillAllData()
     }
     setTimeout(function(){ timer(interval_long); }, interval_long);//Renew timer
@@ -492,5 +498,20 @@ async function updateCustomFieldsNotReg(idBoard, nr ) {
         }  
     }
   return "ACTUALIZADO";
+}
+async function syncViews(){
+    const tickets = await pool.query('SELECT * FROM tickets');
+    let inView3, id, cont = 0;
+    for(i = 0; i < tickets.length; i++){
+        id = (tickets[i].tic_id.includes('A') ? tickets[i].tic_id.split("A")[0] : tickets[i].tic_id );
+        inView3 = await glpi.query('SELECT * FROM `glpidb`.`view_tickets_v3` WHERE `Id Ticket` = ' + id)
+        if(inView3.length != 0){
+            cont++;
+            inView3= inView3[0]
+            await pool.query('UPDATE tickets SET tic_date = ?, tic_last_update_date = ?, tic_closing_date = ?, tic_sol_date = ?  WHERE tic_id = ?',
+                [ inView3["Fecha Solicitud"], inView3["Fecha Último Cambio"], inView3["Fecha Cierre"], inView3["Fecha Solución"],  tickets[i].tic_id ])
+        }
+    }
+    return cont;
 }
 module.exports = router;

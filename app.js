@@ -25,6 +25,7 @@ app.use('/tickets', tickets);
 // Start server
 // Catch 404 errors and forward to error handler. This is called if no match is found in the preceding route functions.
 app.use(function(req, res, next) {
+    console.log(req)
     let err = new Error('Not Found');
     err.status = 404;
     next(err);
