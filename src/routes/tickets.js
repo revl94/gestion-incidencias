@@ -59,7 +59,6 @@ router.get('/update_not_reg', async (req, res) => {
 router.get('/update_all', async (req, res) => {
     //Ruta para el reporte de Incidencias
     await fillAllData()
-    await syncViews();
     res.send("LISTO")
 });
 router.get('/get_tickets', async (req, res) => {
@@ -336,6 +335,7 @@ async function fillAllData(){
             console.log("Tickect #"+tickets[i].tic_id+": Error actualizando este ticket")
         }
     }
+    await syncViews();
 }
 const interval_long =  60*60*1000;//1 hora
 async function timer(interval_long){
