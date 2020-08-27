@@ -50,9 +50,12 @@ router.get('/get_not_reg', async (req, res) => {
 //ruta para actualizar cartas no registradas
 
 router.get('/update_not_reg', async (req, res) => {
-    await getNotRegCards();
-    await updateHoursNotReg();
-    await syncCustomFieldsInNotReg();
+    const a = await getNotRegCards();
+    console.log("getNotRegCards:" + a)
+    const b = await updateHoursNotReg();
+    console.log("updateHoursNotReg:" + b)
+    const c = await syncCustomFieldsInNotReg();
+    console.log("syncCustomFieldsInNotReg:" + c)
     res.send("LISTO")
 });
 
@@ -80,7 +83,7 @@ router.get('/get_ticket/:id', async (req, res) => {
     Si la consulta no fue exitosa retorna la cadena "ERROR"
     */
     const { id } = req.params
-    const result = await glpi.query('SELECT * FROM `glpidb`.`view_tickets_v4` WHERE `Id Ticket` = '+id)
+    const result = await glpi.query('SELECT * FROM `glpidb`.`view_tickets_v3` WHERE `Id Ticket` = '+id)
     if(result.length == 0){
         res.send("ERROR")
     }else{
@@ -379,28 +382,31 @@ async function getNotRegCards(){
     const lists = (await TrelloAxios.get(`/boards/${process.env.notRegID}/lists${keyAndToken}`)).data;
     const endList = lists.filter( (el) => el.name.toUpperCase() == "Finalizadas".toUpperCase() )[0].id;
     const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id;
-    const cards = (await TrelloAxios.get(`/boards/${process.env.notRegID}/cards${keyAndToken}`)).data.filter( (el) => el.idList != valtList );
-    if(cards.length >=1){
+    const cardsB = (await TrelloAxios.get(`/boards/${process.env.notRegID}/cards${keyAndToken}`)).data.filter( (el) => el.idList != valtList );
+    if(cardsB.length >=1){
         let exist, nre, email, status
-        for(i = 0; i < cards.length; i++){
+        for(let index = 0; index < cardsB.length; index++){
             status = 0;
-            if(cards[i].idList == endList){
-                await TrelloAxios.put(`/cards/${cards[i].id}/${keyAndToken}&idList=${valtList}`)
+            if(cardsB[index].idList == endList){
+                await TrelloAxios.put(`/cards/${cardsB[index].id}/${keyAndToken}&idList=${valtList}`)
                 status = 1;
             }
             await new Promise(resolve => setTimeout(resolve, 1000));
-            email = (await TrelloAxios.get(`/cards/${cards[i].id}/members${keyAndToken}`)).data[0].id;
+            email = (await TrelloAxios.get(`/cards/${cardsB[index].id}/members${keyAndToken}`)).data[0].id;
             email = await trelloGetEmail(email);
-            exist = (await pool.query("SELECT if(COUNT(*)>0,'true','false') AS my_bool FROM no_register_mayoreo WHERE nre_card_id = '"+cards[i].id+"';"))[0].my_bool
+            exist = (await pool.query("SELECT if(COUNT(*)>0,'true','false') AS my_bool FROM no_register_mayoreo WHERE nre_card_id = '"+cardsB[index].id+"';"))[0].my_bool
             if(exist == 'true'){
-                nre = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_id = '"+cards[i].id+"';")
-                await pool.query('UPDATE no_register_mayoreo SET nre_title = ?, nre_decription = ?, nre_card_id = ?, nre_card_member_email = ?, nre_card_status = ? WHERE nre_id = ?', [ cards[i].name, (cards[i].desc == undefined ? "" : cards[i].desc), cards[i].id, email, status,nre[0].nre_id ]);
+                
+                nre = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_id = '"+cardsB[index].id+"';")
+                await pool.query('UPDATE no_register_mayoreo SET nre_title = ?, nre_decription = ?, nre_card_id = ?, nre_card_member_email = ?, nre_card_status = ? WHERE nre_id = ?', [ cardsB[index].name, (cardsB[index].desc == undefined ? "" : cardsB[index].desc), cardsB[index].id, email, status,nre[0].nre_id ]);
             }else{
-                await pool.query('INSERT INTO no_register_mayoreo SET ?', {"nre_title": cards[i].name, "nre_decription": (cards[i].desc == undefined ? "" : cards[i].desc),  "nre_card_id": cards[i].id, "nre_card_member_email": email, "nre_card_status": status})
+                await pool.query('INSERT INTO no_register_mayoreo SET ?', {"nre_title": cardsB[index].name, "nre_decription": (cardsB[index].desc == undefined ? "" : cardsB[index].desc),  "nre_card_id": cardsB[index].id, "nre_card_member_email": email, "nre_card_status": status})
             }
         }
+        return "LISTO";
+    }else{
+        return "LISTO";
     }
-    return "LISTO";
 }
 async function trelloGetEmail(userID){
     const users = await pool.query('SELECT * FROM user');
@@ -457,8 +463,10 @@ async function updateHoursNotReg(){
                     ["0" , nr[i].nre_id])
             }
         }
+        return "LISTO";
+    }else{
+        return "LISTO";
     }
-    return "LISTO";
 }
 async function syncCustomFieldsInNotReg(){
     const nr = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_status != 2;")
@@ -476,9 +484,12 @@ async function syncCustomFieldsInNotReg(){
             await new Promise(resolve => setTimeout(resolve, 1000));
             await updateCustomFieldsNotReg(process.env.notRegID, nr[i] );
         }
+        await pool.query("UPDATE no_register_mayoreo SET nre_card_status = 2 WHERE nre_card_status = 1")
+        return "LISTO";
+    }else{
+        await pool.query("UPDATE no_register_mayoreo SET nre_card_status = 2 WHERE nre_card_status = 1")
+        return "LISTO";
     }
-    await pool.query("UPDATE no_register_mayoreo SET nre_card_status = 2 WHERE nre_card_status = 1")
-    return "LISTO";
 }
 function getCustomFieldsInCard(cardID) {
     return new Promise(async (resolve,reject) => {
