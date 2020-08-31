@@ -149,14 +149,14 @@ router.get('/get_hours/:id', async (req, res) => {
                     let totalmin = 0
                     let totalhours = 0
                     hours.forEach(async (dat, i) => {
-                        oldFormat = hours[i].timeInterval.duration
+                        oldFormat = dat.timeInterval.duration
                         newFormat = oldFormat.split('PT')
                         isH = checkH(newFormat[1])
                         isM = checkM(newFormat[1])
                         isS = checkS(newFormat[1])
                         timeFormatted = formatTime(isH, isM, isS)
                         time[i] = {
-                            "description": hours[i].description,
+                            "description": dat.description,
                             "hours": timeFormatted[0],
                             "minutes": timeFormatted[1],
                             "seconds": timeFormatted[2]
@@ -436,14 +436,14 @@ async function updateHoursNotReg(){
                     totalmin = 0
                     totalhours = 0
                     hours.forEach(async (dat, i) => {
-                        oldFormat = hours[i].timeInterval.duration
+                        oldFormat = dat.timeInterval.duration
                         newFormat = oldFormat.split('PT')
                         isH = checkH(newFormat[1])
                         isM = checkM(newFormat[1])
                         isS = checkS(newFormat[1])
                         timeFormatted = formatTime(isH, isM, isS)
                         time[i] = {
-                            "description": hours[i].description,
+                            "description": dat.description,
                             "hours": timeFormatted[0],
                             "minutes": timeFormatted[1],
                             "seconds": timeFormatted[2]
