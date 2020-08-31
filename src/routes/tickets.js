@@ -504,7 +504,7 @@ function getCustomFieldsInCard(cardID) {
 async function updateCustomFieldsNotReg(idBoard, nr ) {
     const fields = ( await TrelloAxios.get(`/boards/${idBoard}/customFields${keyAndToken}`) ).data
     for (let j = 0; j < fields.length; j++) {
-        if(fields[j].name == 'HH Clockify'){
+        if(fields[j].name.toUpperCase() == 'HH Clockify'.toUpperCase()){
             await TrelloAxios.put(`/cards/${nr.nre_card_id}/customField/${fields[j].id}/item${keyAndToken}`, {value:{number: nr.nre_clockify_time}})
         }  
     }
