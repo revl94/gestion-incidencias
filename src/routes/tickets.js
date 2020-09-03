@@ -433,7 +433,7 @@ async function trelloGetEmail(userID){
                 }
             }
         }catch(err){
-            console.log(err)
+            console.log(err.response.status);
             userID2 = "0"
         }
         console.log("\t\t\t\t"+userID2)
