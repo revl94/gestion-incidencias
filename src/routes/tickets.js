@@ -422,9 +422,8 @@ async function trelloGetEmail(userID){
             trelloLimit = "";
             while(trelloLimit != undefined || trelloLimit == "undefined" ){
                 request = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data
-                console.log(request)
                 trelloLimit = request.error
-                console.log(trelloLimit+": " +( trelloLimit == undefined || trelloLimit == "undefined" ))
+                console.log("\t\t"+trelloLimit)
                 if( trelloLimit == undefined || trelloLimit == "undefined" ){
                     userID2 = request.id;
                     break;
@@ -436,6 +435,7 @@ async function trelloGetEmail(userID){
         }catch(err){
             userID2 = "0"
         }
+        console.log("\t\t\t\t"+userID2)
         if(userID == userID2){
             email = users[i].usr_email;
             break;
