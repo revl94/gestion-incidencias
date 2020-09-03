@@ -396,7 +396,6 @@ async function getNotRegCards(){
             }
             await new Promise(resolve => setTimeout(resolve, 1000));
             email = (await TrelloAxios.get(`/cards/${cardsB[index].id}/members${keyAndToken}`)).data;
-            console.log("Miembros de la carta: "+ email.length)
             email = email[0].id;
             email = await trelloGetEmail(email);
             exist = (await pool.query("SELECT if(COUNT(*)>0,'true','false') AS my_bool FROM no_register_mayoreo WHERE nre_card_id = '"+cardsB[index].id+"';"))[0].my_bool
@@ -425,8 +424,11 @@ async function trelloGetEmail(userID){
         if(userID == userID2){
             email = users[i].usr_email;
             break;
+        }else{
+            console.log(users[i].usr_email + " descartado")
         }
     }
+    console.log("El email es: " + email)
     return email;
 }
 async function updateHoursNotReg(){
