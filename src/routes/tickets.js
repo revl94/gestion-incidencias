@@ -384,6 +384,7 @@ async function getNotRegCards(){
     const lists = (await TrelloAxios.get(`/boards/${process.env.notRegID}/lists${keyAndToken}`)).data;
     const endList = lists.filter( (el) => el.name.toUpperCase() == "Finalizadas".toUpperCase() )[0].id;
     const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id;
+    console.log("Try into: " +`/boards/${process.env.notRegID}/cards${keyAndToken}`)
     const cardsB = (await TrelloAxios.get(`/boards/${process.env.notRegID}/cards${keyAndToken}`)).data.filter( (el) => el.idList != valtList );
     if(cardsB.length >=1){
         let exist, nre, email, status
