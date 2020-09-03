@@ -437,8 +437,7 @@ async function SyncTrelloUsers(){
             userID = "0"
             userName = ""
         }
-        console.log("UPDATE SET usr_id_trello = "+ userID+ ", usr_trello = '" + userName + "' WHERE usr_id = " + users[i].usr_id)
-        await pool.query("UPDATE SET usr_id_trello = '"+ userID+ "', usr_trello = '" + userName + "' WHERE usr_id = " + users[i].usr_id);
+        await pool.query("UPDATE user SET usr_id_trello = '"+ userID+ "', usr_trello = '" + userName + "' WHERE usr_id = " + users[i].usr_id);
     }
     return "LISTO"; 
 }
