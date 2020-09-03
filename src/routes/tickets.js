@@ -434,7 +434,7 @@ async function SyncTrelloUsers(){
                 band = true;
                 await new Promise(resolve => setTimeout(resolve, 300*1000));//300seg = 5min
             }
-            userID = "0"
+            userID = ""
             userName = ""
         }
         await pool.query("UPDATE user SET usr_id_trello = '"+ userID+ "', usr_trello = '" + userName + "' WHERE usr_id = " + users[i].usr_id);
@@ -442,7 +442,7 @@ async function SyncTrelloUsers(){
     return "LISTO"; 
 }
 async function trelloGetEmail(userID){
-    const user = await pool.query('SELECT * FROM user WHERE usr_id_trello = ' + userID);
+    const user = await pool.query('SELECT * FROM user WHERE usr_id_trello = "' + userID + '"');
     if(user.length != 0){
         return user[0].usr_email;
     }else{
