@@ -415,10 +415,13 @@ async function getNotRegCards(){
 async function trelloGetEmail(userID){
     const users = await pool.query('SELECT * FROM user');
     let userID2, email = "";
-    let trelloLimit, request;
+    let trelloLimit, request, band = false;
     console.log("\tBuscando: "+userID)
     for(i = 0; i < users.length; i++){
         try{
+            if(band){
+                i-=1;
+            }
             trelloLimit = "";
             while(trelloLimit != undefined || trelloLimit == "undefined" ){
                 request = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data
@@ -433,7 +436,11 @@ async function trelloGetEmail(userID){
                 }
             }
         }catch(err){
-            console.log(err.response.status);
+            if(err.response.status == 429){
+                console.log("Entrando en espera ("+trelloLimit+")")
+                band = true;
+                await new Promise(resolve => setTimeout(resolve, 900*1000));//900segundos
+            }
             userID2 = "0"
         }
         console.log("\t\t\t\t"+userID2)
