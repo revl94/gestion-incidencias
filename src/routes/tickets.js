@@ -326,6 +326,7 @@ function formatTime(isH, isM, isS) {
 
 // Funcion para actualizar a las 12 AM
 async function fillAllData(){
+    console.log("here")
     const sync = await syncNotReg();
     const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false"')
     let result;
