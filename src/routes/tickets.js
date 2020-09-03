@@ -384,22 +384,16 @@ async function getNotRegCards(){
     const lists = (await TrelloAxios.get(`/boards/${process.env.notRegID}/lists${keyAndToken}`)).data;
     const endList = lists.filter( (el) => el.name.toUpperCase() == "Finalizadas".toUpperCase() )[0].id;
     const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id;
-    console.log("Try into: " +`/boards/${process.env.notRegID}/cards${keyAndToken}`)
     const cardsB = (await TrelloAxios.get(`/boards/${process.env.notRegID}/cards${keyAndToken}`)).data.filter( (el) => el.idList != valtList );
-    console.log("Cards: " +cardsB.length)
     if(cardsB.length >=1){
         let exist, nre, email, status
         for(let index = 0; index < cardsB.length; index++){
             status = 0;
             if(cardsB[index].idList == endList){
-                console.log("Moviendo card: " + cardsB[index].id)
-                console.log(`/cards/${cardsB[index].id}/${keyAndToken}&idList=${valtList}`)
                 await TrelloAxios.put(`/cards/${cardsB[index].id}/${keyAndToken}&idList=${valtList}`)
                 status = 1;
             }
             await new Promise(resolve => setTimeout(resolve, 1000));
-            console.log("Buscando miembros de: " + cardsB[index].id)
-            console.log(`/cards/${cardsB[index].id}/members${keyAndToken}`)
             email = (await TrelloAxios.get(`/cards/${cardsB[index].id}/members${keyAndToken}`)).data[0].id;
             email = await trelloGetEmail(email);
             exist = (await pool.query("SELECT if(COUNT(*)>0,'true','false') AS my_bool FROM no_register_mayoreo WHERE nre_card_id = '"+cardsB[index].id+"';"))[0].my_bool
@@ -417,12 +411,14 @@ async function getNotRegCards(){
     }
 }
 async function trelloGetEmail(userID){
-    console.log("UserID: "+userID)
     const users = await pool.query('SELECT * FROM user');
     let userID2, email = "";
     for(i = 0; i < users.length; i++){
-        console.log(`Revisando: /members/${users[i].usr_email}${keyAndToken}`)
-        userID2 = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data.id;
+        try{
+            userID2 = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data.id;
+        }catch(err){
+            userID2 = "0"
+        }
         if(userID == userID2){
             email = users[i].usr_email;
             break;
@@ -446,7 +442,6 @@ async function updateHoursNotReg(){
                     totalhours = 0
                     hours.forEach(async (dat, i) => {
                         oldFormat = dat.timeInterval.duration
-                        console.log("Time interval: " + oldFormat);
                         newFormat = oldFormat.split('PT')
                         isH = checkH(newFormat[1])
                         isM = checkM(newFormat[1])
