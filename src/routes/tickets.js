@@ -388,13 +388,16 @@ async function getNotRegCards(){
     if(cardsB.length >=1){
         let exist, nre, email, status
         for(let index = 0; index < cardsB.length; index++){
+            console.log("Procesando la carta: "+cardsB[index].desc)
             status = 0;
             if(cardsB[index].idList == endList){
                 await TrelloAxios.put(`/cards/${cardsB[index].id}/${keyAndToken}&idList=${valtList}`)
                 status = 1;
             }
             await new Promise(resolve => setTimeout(resolve, 1000));
-            email = (await TrelloAxios.get(`/cards/${cardsB[index].id}/members${keyAndToken}`)).data[0].id;
+            email = (await TrelloAxios.get(`/cards/${cardsB[index].id}/members${keyAndToken}`)).data;
+            console.log("Miembros de la carta: "+ email.length)
+            email = email[0].id;
             email = await trelloGetEmail(email);
             exist = (await pool.query("SELECT if(COUNT(*)>0,'true','false') AS my_bool FROM no_register_mayoreo WHERE nre_card_id = '"+cardsB[index].id+"';"))[0].my_bool
             if(exist == 'true'){
