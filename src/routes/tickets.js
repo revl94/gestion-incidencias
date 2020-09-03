@@ -54,13 +54,8 @@ router.get('/get_not_reg', async (req, res) => {
 //ruta para actualizar cartas no registradas
 
 router.get('/update_not_reg', async (req, res) => {
-    const a = await getNotRegCards();
-    console.log("getNotRegCards:" + a)
-    const b = await updateHoursNotReg();
-    console.log("updateHoursNotReg:" + b)
-    const c = await syncCustomFieldsInNotReg();
-    console.log("syncCustomFieldsInNotReg:" + c)
-    res.send("LISTO")
+    const sync = await syncNotReg();
+    res.send(sync)
 });
 
 router.get('/update_all', async (req, res) => {
@@ -331,6 +326,7 @@ function formatTime(isH, isM, isS) {
 
 // Funcion para actualizar a las 12 AM
 async function fillAllData(){
+    const sync = await syncNotReg();
     const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false"')
     let result;
     for(let index = 0; index<tickets.length; index++){
@@ -416,18 +412,28 @@ async function getNotRegCards(){
         return "LISTO";
     }
 }
+async function syncNotReg(){
+    const sync = await SyncTrelloUsers()
+    console.log("SyncTrelloUsers:" + sync)
+    const a = await getNotRegCards();
+    console.log("getNotRegCards:" + a)
+    const b = await updateHoursNotReg();
+    console.log("updateHoursNotReg:" + b)
+    const c = await syncCustomFieldsInNotReg();
+    console.log("syncCustomFieldsInNotReg:" + c)
+    return "LISTO";
+}
 async function SyncTrelloUsers(){
     const users = await pool.query('SELECT * FROM user WHERE usr_id_trello IS NULL');
-    let Request, userID, userName, band = false;
+    let Request, userID, band = false;
     for(let i = 0; i < users.length; i++){
         try{
             if(band){
                 band = !band;
                 i-=1;
             }
-            Request = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data
+            Request = (await TrelloAxios.get(`/members/${users[i].usr_trello}${keyAndToken}`)).data
             userID = Request.id
-            userName = Request.username
         }catch(err){
             if(err.response.status == 429){
                 console.log("Entrando en espera, limite de solicitudes alcanzado")
@@ -435,9 +441,8 @@ async function SyncTrelloUsers(){
                 await new Promise(resolve => setTimeout(resolve, 300*1000));//300seg = 5min
             }
             userID = ""
-            userName = ""
         }
-        await pool.query("UPDATE user SET usr_id_trello = '"+ userID+ "', usr_trello = '" + userName + "' WHERE usr_id = " + users[i].usr_id);
+        await pool.query("UPDATE user SET usr_id_trello = '"+ userID+ "' WHERE usr_id = " + users[i].usr_id);
     }
     return "LISTO"; 
 }
