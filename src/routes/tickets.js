@@ -41,8 +41,12 @@ const HttpStatus = require('http-status-codes');
 const { stat } = require('fs');
 
 //Rutas
+//ruta para inicializar IDs de usuario de trello
+router.get('/sync_trello_users', async (req, res) => {
+    const result = await SyncTrelloUsers()
+    res.send(result)
+});
 //ruta para devolver cartas no registradas
-
 router.get('/get_not_reg', async (req, res) => {
     const result = await pool.query("SELECT *, (SELECT usr_name FROM user WHERE usr_email = x.nre_card_member_email LIMIT 1) AS name FROM no_register_mayoreo AS x;")
     res.json({cards: result})
@@ -412,45 +416,38 @@ async function getNotRegCards(){
         return "LISTO";
     }
 }
-async function trelloGetEmail(userID){
-    const users = await pool.query('SELECT * FROM user');
-    let userID2, email = "";
-    let trelloLimit, request, band = false;
-    console.log("\tBuscando: "+userID)
-    for(i = 0; i < users.length; i++){
+async function SyncTrelloUsers(){
+    const users = await pool.query('SELECT * FROM user WHERE usr_id_trello IS NULL');
+    let Request, userID, userName, band = false;
+    for(let i = 0; i < users.length; i++){
         try{
             if(band){
+                band = !band;
                 i-=1;
             }
-            trelloLimit = "";
-            while(trelloLimit != undefined || trelloLimit == "undefined" ){
-                request = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data
-                trelloLimit = request.error
-                console.log("\t\t"+trelloLimit)
-                if( trelloLimit == undefined || trelloLimit == "undefined" ){
-                    userID2 = request.id;
-                    break;
-                }else{
-                    console.log("Entrando en espera ("+trelloLimit+")")
-                    await new Promise(resolve => setTimeout(resolve, 900*1000));//900segundos
-                }
-            }
+            Request = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data
+            userID = Request.id
+            userName = Request.username
         }catch(err){
             if(err.response.status == 429){
-                console.log("Entrando en espera ("+trelloLimit+")")
+                console.log("Entrando en espera, limite de solicitudes alcanzado")
                 band = true;
-                await new Promise(resolve => setTimeout(resolve, 900*1000));//900segundos
+                await new Promise(resolve => setTimeout(resolve, 300*1000));//300seg = 5min
             }
-            userID2 = "0"
+            userID = "0"
+            userName = ""
         }
-        console.log("\t\t\t\t"+userID2)
-        if(userID == userID2){
-            email = users[i].usr_email;
-            break;
-        }
+        await pool.query("UPDATE SET usr_id_trello = "+ userID+ ", usr_trello = '" + userName + "' WHERE usr_id = " + users[i].usr_id);
     }
-    console.log("\tEl email es: " + email)
-    return email;
+    return "LISTO"; 
+}
+async function trelloGetEmail(userID){
+    const user = await pool.query('SELECT * FROM user WHERE usr_id_trello = ' + userID);
+    if(user.length != 0){
+        return user[0].usr_email;
+    }else{
+        return "";
+    }
 }
 async function updateHoursNotReg(){
     const nr = await pool.query("SELECT * FROM no_register_mayoreo WHERE nre_card_status != 2;")
