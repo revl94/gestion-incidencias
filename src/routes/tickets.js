@@ -417,10 +417,11 @@ async function getNotRegCards(){
     }
 }
 async function trelloGetEmail(userID){
+    console.log("UserID: "+userID)
     const users = await pool.query('SELECT * FROM user');
     let userID2, email = "";
     for(i = 0; i < users.length; i++){
-        await new Promise(resolve => setTimeout(resolve, 3000));
+        console.log(`Revisando: /members/${users[i].usr_email}${keyAndToken}`)
         userID2 = (await TrelloAxios.get(`/members/${users[i].usr_email}${keyAndToken}`)).data.id;
         if(userID == userID2){
             email = users[i].usr_email;
