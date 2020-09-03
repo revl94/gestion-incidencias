@@ -340,7 +340,7 @@ async function fillAllData(){
     }
     await syncViews();
 }
-const interval_long =  1*60*1000;//1 hora
+const interval_long =  60*60*1000;//1 hora
 async function timer(interval_long){
     const date = (new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}))).getHours(); // Create a Date object to find out what time it is
     console.log("Timer Date: " +date)
