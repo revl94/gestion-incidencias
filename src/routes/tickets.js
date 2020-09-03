@@ -329,13 +329,13 @@ function formatTime(isH, isM, isS) {
 async function fillAllData(){
     const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false"')
     let result;
-    for(i = 0; i<tickets.length; i++){
-        result = await Backend.get('/tickets/update_ticket/'+tickets[i].tic_id);
+    for(let index = 0; index<tickets.length; index++){
+        result = await Backend.get('/tickets/update_ticket/'+tickets[index].tic_id);
         await new Promise(resolve => setTimeout(resolve, 3000));
         if(result.data == "LISTO"){
-            console.log("Tickect #"+tickets[i].tic_id+": ticket actualizado")
+            console.log("Tickect #"+tickets[index].tic_id+": ticket actualizado")
         }else{
-            console.log("Tickect #"+tickets[i].tic_id+": Error actualizando este ticket")
+            console.log("Tickect #"+tickets[index].tic_id+": Error actualizando este ticket")
         }
     }
     await syncViews();
@@ -388,7 +388,7 @@ async function getNotRegCards(){
     if(cardsB.length >=1){
         let exist, nre, email, status
         for(let index = 0; index < cardsB.length; index++){
-            console.log("Procesando la carta: "+cardsB[index].desc)
+            console.log("Procesando la carta: "+cardsB[index].name)
             status = 0;
             if(cardsB[index].idList == endList){
                 await TrelloAxios.put(`/cards/${cardsB[index].id}/${keyAndToken}&idList=${valtList}`)
