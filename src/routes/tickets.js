@@ -386,11 +386,14 @@ async function getNotRegCards(){
     const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id;
     console.log("Try into: " +`/boards/${process.env.notRegID}/cards${keyAndToken}`)
     const cardsB = (await TrelloAxios.get(`/boards/${process.env.notRegID}/cards${keyAndToken}`)).data.filter( (el) => el.idList != valtList );
+    console.log("Cards: " +cardsB.length)
     if(cardsB.length >=1){
         let exist, nre, email, status
         for(let index = 0; index < cardsB.length; index++){
             status = 0;
             if(cardsB[index].idList == endList){
+                console.log("Moviendo card: " + cardsB[index].id)
+                console.log(`/cards/${cardsB[index].id}/${keyAndToken}&idList=${valtList}`)
                 await TrelloAxios.put(`/cards/${cardsB[index].id}/${keyAndToken}&idList=${valtList}`)
                 status = 1;
             }
