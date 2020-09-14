@@ -60,7 +60,8 @@ router.get('/update_not_reg', async (req, res) => {
 
 router.get('/update_all', async (req, res) => {
     //Ruta para el reporte de Incidencias
-    await fillAllData()
+    await fillAllData();
+    await fillAllData_NotReg();
     res.send("LISTO")
 });
 router.get('/get_tickets', async (req, res) => {
@@ -326,8 +327,7 @@ function formatTime(isH, isM, isS) {
 
 // Funcion para actualizar a las 12 AM
 async function fillAllData(){
-    console.log("here")
-    const sync = await syncNotReg();
+    console.log("Actualizando registrados");
     const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false"')
     let result;
     for(let index = 0; index<tickets.length; index++){
@@ -341,18 +341,32 @@ async function fillAllData(){
     }
     await syncViews();
 }
+async function fillAllData_NotReg(){
+    console.log("Actualizando no registrados")
+    const sync = await syncNotReg();
+    console.log(sync);
+}
 const interval_long =  60*60*1000;//1 hora
-async function timer(interval_long){
+async function timer_Reg(interval_long){
     const date = (new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}))).getHours(); // Create a Date object to find out what time it is
-    console.log("Timer Date: " +date)
+    console.log("Timer_Reg Date: " +date)
     console.log("State: " +(date < 13 && date >= 12) || (date < 19 && date >= 18))
     if( (date < 13 && date >= 12) || (date < 19 && date >= 18) ){ // Check the time at 12:00PM - 01:00PM OR 06:00PM - 07:00PM
         await fillAllData()
     }
-    setTimeout(function(){ timer(interval_long); }, interval_long);//Renew timer
+    setTimeout(function(){ timer_Reg(interval_long); }, interval_long);//Renew timer_Reg
 }
-timer(interval_long)
-
+timer_Reg(interval_long)
+async function timer_NotReg(interval_long){
+    const date = (new Date(new Date().toLocaleString("en-US", {timeZone: "America/Caracas"}))).getHours(); // Create a Date object to find out what time it is
+    console.log("Timer_NotReg Date: " +date)
+    console.log("State: " +(date < 13 && date >= 12) || (date < 19 && date >= 18))
+    if( (date < 13 && date >= 12) || (date < 19 && date >= 18) ){ // Check the time at 12:00PM - 01:00PM OR 06:00PM - 07:00PM
+        await fillAllData_NotReg()
+    }
+    setTimeout(function(){ timer_NotReg(interval_long); }, interval_long);//Renew timer_NotReg
+}
+timer_NotReg(interval_long)
 //Funcion para imprimir errores
 function printError(e){
     if(e!=null){
