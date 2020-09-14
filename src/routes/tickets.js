@@ -220,14 +220,17 @@ router.get('/update_ticket/:id', async (req, res) => {
     if(ticket.length == 0){
         res.send("Ticket no inicializado. Debe inicializar el ticket para poder procesarlo")
     }else{
+        console.log("\t\tValidando status")
         const boardID = (await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"'))[0].board_id
         const validated = await getCardStatus(ticket[0], boardID)
         if(validated){
             res.send("Ticket validado, no se puede volver a procesar")
         }else{
+            console.log("\t\tValidando horas")
             const hours = await Backend.get('/tickets/get_hours/'+id);
             if(hours != "ERROR"){
                 if(ticket[0].tic_card_id != null){
+                    console.log("\t\tActualizando carta")
                     const updatecard = await Backend.get('/trello/update_card/'+id);
                     res.send("LISTO")
                 }else{
