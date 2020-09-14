@@ -337,6 +337,7 @@ async function fillAllData(){
             console.log("Tickect #"+tickets[index].tic_id+": ticket actualizado")
         }else{
             console.log("Tickect #"+tickets[index].tic_id+": Error actualizando este ticket")
+            console.log("\t"+result.data)
         }
     }
     await syncViews();
