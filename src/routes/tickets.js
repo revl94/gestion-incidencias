@@ -223,8 +223,10 @@ router.get('/update_ticket/:id', async (req, res) => {
         console.log("\t\tValidando status")
         const boardID = (await pool.query('SELECT * FROM branch WHERE ram_name = "'+ticket[0].tic_branch +'"'))[0].board_id
         const validated = await getCardStatus(ticket[0], boardID)
-        if(validated){
+        if(validated[0] && validated[1]){
             res.send("Ticket validado, no se puede volver a procesar")
+        }else if(!(validated[0] && validated[1])){
+            res.send("Ticket eliminado, no se puede volver a procesar")
         }else{
             console.log("\t\tValidando horas")
             const hours = await Backend.get('/tickets/get_hours/'+id);
@@ -385,14 +387,21 @@ function getCardStatus(ticket, boardID) {
           //const initList = lists.filter( (el) => el.name.toUpperCase() == "Por Iniciar".toUpperCase() )[0].id
           //const endList = lists.filter( (el) => el.name.toUpperCase() == "Finalizadas".toUpperCase() )[0].id
           const valtList = lists.filter( (el) => el.name.toUpperCase() == "Validadas".toUpperCase() )[0].id
-          const card = (await TrelloAxios.get(`/boards/${boardID}/cards/${cardID+keyAndToken}`)).data;
-          if(card.idList == valtList){
+          try {
+            const card = (await TrelloAxios.get(`/boards/${boardID}/cards/${cardID+keyAndToken}`)).data;
+            if(card.idList == valtList){
+                await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',
+                ["true", ticket.tic_id]);
+                resolve([true, true])
+              }else{
+                resolve([false, true])
+              }
+          } catch (error) {
             await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',
-            ["true", ticket.tic_id]);
-            resolve(true)
-          }else{
-            resolve(false)
+            ["eliminado", ticket.tic_id]);
+            resolve([false, false])
           }
+          
           resolve(result)
         } catch (error) {
           reject(error)
