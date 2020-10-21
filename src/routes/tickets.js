@@ -225,7 +225,7 @@ router.get('/update_ticket/:id', async (req, res) => {
         const validated = await getCardStatus(ticket[0], boardID)
         if(validated[0] && validated[1]){
             res.send("Ticket validado, no se puede volver a procesar")
-        }else if(!(validated[0] && validated[1])){
+        }else if(!validated[0] && !validated[1]){
             res.send("Ticket eliminado, no se puede volver a procesar")
         }else{
             console.log("\t\tValidando horas")
