@@ -331,7 +331,7 @@ function formatTime(isH, isM, isS) {
 // Funcion para actualizar a las 12 AM
 async function fillAllData(){
     console.log("Actualizando registrados");
-    const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false"')
+    const tickets = await pool.query('SELECT * FROM tickets WHERE tic_card_status = "false" AND tic_card_id IS NOT NULL')
     let result;
     for(let index = 0; index<tickets.length; index++){
         result = await Backend.get('/tickets/update_ticket/'+tickets[index].tic_id);
