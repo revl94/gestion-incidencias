@@ -397,6 +397,7 @@ function getCardStatus(ticket, boardID) {
                 resolve([false, true])
               }
           } catch (error) {
+              console.log(error)
             await pool.query('UPDATE tickets SET tic_card_status = ?  WHERE tic_id = ?',
             ["eliminado", ticket.tic_id]);
             resolve([false, false])
