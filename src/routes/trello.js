@@ -410,4 +410,21 @@ function printError(e){
         console.log(e)
     }
 }
+// Create users
+router.post('/create_user', async (req, res) => {
+    const { name, email, ci, id_trello, usr_trello } = req.body
+    try {
+        const result = await pool.query(`INSERT INTO user (usr_name, usr_email, usr_ci, usr_id_trello, usr_trello) VALUES ("${name}", "${email}", "${ci}", "${id_trello}", "${usr_trello}");`)
+        res.json(result);
+    } catch (err) {
+        res.json(err);
+    }
+
+});
+//get all users
+router.get('/get_users', async (req, res) => {
+    const result = await pool.query(`SELECT usr_name, usr_email, usr_trello from user;`)
+    res.json(result);
+});
+
 module.exports = router;
